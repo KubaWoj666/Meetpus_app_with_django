@@ -1,6 +1,11 @@
 {% extends '_base.html' %}
 {% load static %}
 
+{% block css %}
+    <link rel="stylesheet" href="{% static 'meetups/style/home.css' %}">
+{% endblock css %}
+    
+
 
 {% block title %}
  Home Page
@@ -10,17 +15,30 @@
 
 {% block content %}
 
-<div class="card" style="width: 20rem;">
-    <img src="{% static 'images/logo1.png' %}" class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      <address>Warszawa</address>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
-      <a href="#" class="btn btn-primary">Sign Up</a>
-      
-    </div>
-</div>
+<section>
+    <h2 class="header">Latest meetups</h2>
+    <ol>
+        {% for meetup in meetups %}
+        <li class="meetup-item">
+            <article>
+                <div class="meetup-summary">
+                    <div class="meetup-image">
+                        <img src="{{meetup.image.url}}" alt="{{meetup.title}}">
+                    </div>
+                    <div class="meetup-details">
+                        <h3>{{meetup.title}}</h3>
+                        <address>Warszawa</address>
+                    </div>
+                </div>
+                <div class="meetup-actions">
+                    <a href="{% url 'detail' meetup.slug %}" class="btn">More Details</a>
+                </div>
+            </article>
+        </li>
+        {% endfor %}
+    </ol>
+</section>
+
  
 {% endblock content %}
     

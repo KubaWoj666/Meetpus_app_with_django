@@ -1,13 +1,24 @@
 from django.shortcuts import render
 
+from.models import Meetup
+
 def home_view(request):
-    text = f"Hello from views.py"
+    meetups = Meetup.objects.all().order_by("-created")[:3]
 
     context = {
-        "text":text
+        "meetups": meetups
     }
 
     return render(request, "meetups/home.html", context)
+
+
+def detail_view(request, slug):
+    meetup = Meetup.objects.get(slug=slug)
+
+    context = {
+        "meetup":meetup
+    }
+    return render(request, "meetups/detail.html" ,context)
 
 
 def all_meetups_view(request):

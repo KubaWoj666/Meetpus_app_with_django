@@ -1,12 +1,12 @@
 from django.db import models
 
 class Meetup(models.Model):
-    slug = models.SlugField(unique=True)
     title = models.CharField(max_length=100)
-    description = models.CharField(max_length=300)
+    description = models.TextField()
     image = models.ImageField(upload_to="images")
     organizer_email = models.EmailField()
     date = models.DateField()
+    slug = models.SlugField(unique=True)
     created = models.DateTimeField(auto_now_add=True)
     
 
