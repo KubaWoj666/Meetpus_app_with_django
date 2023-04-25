@@ -18,7 +18,7 @@
 <section>
     <h2 class="header">Latest meetups</h2>
     <ol>
-        {% for meetup in meetups %}
+        {% for meetup in latest_meetups %}
         <li class="meetup-item">
             <article>
                 <div class="meetup-summary">
@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="meetup-actions">
-                    <a href="{% url 'detail' meetup.slug %}" class="btn">More Details</a>
+                    <a href="{{ meetup.get_absolute_url }}" class="btn">More Details</a>
                 </div>
             </article>
         </li>

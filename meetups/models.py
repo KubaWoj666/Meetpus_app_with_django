@@ -1,4 +1,9 @@
 from django.db import models
+from django.urls import reverse
+
+
+
+
 
 class Meetup(models.Model):
     title = models.CharField(max_length=100)
@@ -12,3 +17,6 @@ class Meetup(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+    def get_absolute_url(self):
+        return reverse('detail', args=[self.slug])

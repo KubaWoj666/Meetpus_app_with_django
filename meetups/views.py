@@ -3,10 +3,12 @@ from django.shortcuts import render
 from.models import Meetup
 
 def home_view(request):
-    meetups = Meetup.objects.all().order_by("-created")[:3]
+    meetups = Meetup.objects.all()
+    latest_meetups = meetups.order_by("-created")[:3]
+    
 
     context = {
-        "meetups": meetups
+        "latest_meetups": latest_meetups
     }
 
     return render(request, "meetups/home.html", context)
