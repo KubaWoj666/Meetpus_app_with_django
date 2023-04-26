@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
 
 from.models import Meetup
 
@@ -19,12 +20,23 @@ def home_view(request):
 
 
 def detail_view(request, slug):
-    meetup = Meetup.objects.get(slug=slug)
+    try:
+        meetup = Meetup.objects.get(slug=slug)
 
-    context = {
-        "meetup":meetup
-    }
-    return render(request, "meetups/detail.html" ,context)
+        context = {
+            "meetup":meetup,
+            "meetup_exist":True
+        }
+        return render(request, "meetups/detail.html" ,context)
+    
+    except Exception as exc:
+
+        context = {
+            "meetup_exist":False
+        }
+        return render(request, "meetups/detail.html" ,context)
+
+
 
 
 def all_meetups_view(request):
@@ -35,3 +47,16 @@ def all_meetups_view(request):
     }
 
     return render(request, "meetups/all_meetups.html", context)
+
+def search_meetups(request):
+    q = request.GET.get("q") if request.GET.get("q") !=None else ""
+
+    search_meetup = Meetup.objects.filter(Q(title__icontains=q))
+
+    context = {
+        "search_meetup":search_meetup
+    }
+
+    return render(request, "meetups/search.html", context)
+
+    

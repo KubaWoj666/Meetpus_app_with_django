@@ -1,0 +1,49 @@
+{% extends '_base.html' %}
+{% load static %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'meetups/style/all-meetups.css' %}">
+{% endblock css %}
+    
+
+
+{% block title %}
+    Searched Meetings
+{% endblock title %}
+    
+
+
+{% block content %}
+    
+    {% if search_meetup %}
+        <section>
+            <h2 class="header">We found this</h2>
+            <ol>
+                {% for meetup in search_meetup %}
+                <li class="meetup-item">
+                    <article>
+                        <div class="meetup-summary">
+                            <div class="meetup-image">
+                                <img src="{{meetup.image.url}}" alt="{{meetup.title}}">
+                            </div>
+                            <div class="meetup-details">
+                                <h3>{{meetup.title}}</h3>
+                                <address>{{meetup.location.country}}</address>
+                            </div>
+                        </div>
+                        <div class="meetup-actions">
+                            <a href="{{ meetup.get_absolute_url }}" class="btn">More Details</a>
+                        </div>
+                    </article>
+                </li>
+                {% endfor %}
+            </ol>
+        </section>
+
+    {% else %}
+        no meetups
+    {% endif %}
+        
+{% endblock content %}
+    

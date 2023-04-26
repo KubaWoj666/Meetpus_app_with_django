@@ -13,6 +13,9 @@
     
 
 {% block content %}
+
+{% if meetup_exist %}
+    
     <article>
         <img  id="main-image"  src="{{ meetup.image.url }}" alt="{{ meetup.title }}">
 
@@ -29,5 +32,10 @@
 
         
     </article>
+
+    {% else %}
+    <h2>no meetup</h2>
+
+    {% endif %}
 {% endblock content %}
     
