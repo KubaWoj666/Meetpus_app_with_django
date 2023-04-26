@@ -51,7 +51,8 @@ def all_meetups_view(request):
 def search_meetups(request):
     q = request.GET.get("q") if request.GET.get("q") !=None else ""
 
-    search_meetup = Meetup.objects.filter(Q(title__icontains=q))
+    search_meetup = Meetup.objects.filter(Q(title__icontains=q) | 
+                                          Q(location__country__icontains=q))
 
     context = {
         "search_meetup":search_meetup

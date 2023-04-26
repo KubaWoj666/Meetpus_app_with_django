@@ -79,12 +79,17 @@ class MeetupsTestCase(TestCase):
 
     def test_search_meetups_view(self):
         response = self.client.get(reverse("search"), {"q":"test"})
+        country_response = self.client.get(reverse("search"), {"q":"poland"})
         no_response = self.client.get(reverse("search"), {"q":"no response"})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(no_response.status_code, 200)
+        self.assertEqual(country_response.status_code, 200)
         self.assertContains(response, "test meetup")
+        self.assertContains(country_response, "Poland")
         self.assertNotContains(response, "Something else")
         self.assertNotContains(no_response, "test meetup")
         self.assertTemplateUsed(response, "meetups/search.html")
-        self.assertTemplateUsed(no_response,"meetups/search.html" )
+        self.assertTemplateUsed(no_response, "meetups/search.html")
+        self.assertTemplateUsed(country_response, "meetups/search.html")
+
 
