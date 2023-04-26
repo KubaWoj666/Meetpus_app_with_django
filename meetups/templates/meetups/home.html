@@ -14,6 +14,9 @@
 
 
 {% block content %}
+<section>
+    <h2>We have {{ count_meetups }} meetups</h2>
+</section>
 
 <section>
     <h2 class="header">Latest meetups</h2>
@@ -27,7 +30,31 @@
                     </div>
                     <div class="meetup-details">
                         <h3>{{meetup.title}}</h3>
-                        <address>Warszawa</address>
+                        <address>{{meetup.location.country}}</address>
+                    </div>
+                </div>
+                <div class="meetup-actions">
+                    <a href="{{ meetup.get_absolute_url }}" class="btn">More Details</a>
+                </div>
+            </article>
+        </li>
+        {% endfor %}
+    </ol>
+</section>
+
+<section>
+    <h2 class="header">Ends Soon</h2>
+    <ol>
+        {% for meetup in end_soon_meetups %}
+        <li class="meetup-item">
+            <article>
+                <div class="meetup-summary">
+                    <div class="meetup-image">
+                        <img src="{{meetup.image.url}}" alt="{{meetup.title}}">
+                    </div>
+                    <div class="meetup-details">
+                        <h3>{{meetup.title}}</h3>
+                        <address>{{meetup.location.country}}</address>
                     </div>
                 </div>
                 <div class="meetup-actions">

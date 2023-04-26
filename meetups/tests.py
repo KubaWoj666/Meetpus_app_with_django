@@ -6,7 +6,7 @@ from django.utils import timezone
 import datetime
 
 from .views import home_view, detail_view
-from .models import Meetup
+from .models import Meetup, Location
 
 class HomePageTest(TestCase):
     def setUp(self) -> None:
@@ -31,12 +31,18 @@ class HomePageTest(TestCase):
 class MeetupsTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
+        cls.location = Location.objects.create(country="Poland",
+                                               city="Warsaw",
+                                               street="Main Street")
+        
         cls.meetup = Meetup.objects.create(title="test meetup",
                               description="test meetup description",
                               organizer_email="test@email.com",
                               image="test.jpg",
                               date=timezone.now().date() + datetime.timedelta(days=1),
-                              slug='test-slug')
+                              slug='test-slug',
+                              location = cls.location)
+        
     
     def test_meetup_model(self):
         meetup = Meetup.objects.first()
@@ -44,6 +50,9 @@ class MeetupsTestCase(TestCase):
         self.assertEqual(self.meetup.title, "test meetup")
         self.assertEqual(meetup.description, "test meetup description")
         self.assertEqual(meetup.organizer_email, "test@email.com")
+        self.assertEqual(meetup.location.country, "Poland")
+        self.assertEqual(meetup.location.city, "Warsaw")
+        self.assertEqual(meetup.location.street, "Main Street")
         self.assertIsInstance(meetup.date, datetime.date)
         self.assertAlmostEqual(
             meetup.created,
@@ -62,3 +71,8 @@ class MeetupsTestCase(TestCase):
         self.assertTemplateUsed(response, "meetups/detail.html")
         self.assertEqual(view.func.__name__, detail_view.__name__)
     
+
+    def test_all_meetups_view(self):
+        response = self.client.get(reverse("all_meetups"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "meetups/all_meetups.html")
