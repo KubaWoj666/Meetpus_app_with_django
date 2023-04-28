@@ -1,8 +1,21 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 
 import datetime
+
+class CustomUser(User):
+    pass
+
+class ProUser(CustomUser):
+    is_creator = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name_plural = "ProUsers"
+
+
+
 
 class Location(models.Model):
     country = models.CharField(max_length=100)
@@ -23,6 +36,7 @@ class Meetup(models.Model):
     slug = models.SlugField(unique=True)
     created = models.DateTimeField(auto_now_add=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    
     
 
     def __str__(self):

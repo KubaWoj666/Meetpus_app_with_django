@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Meetup, Location
+from .models import Meetup, Location, CustomUser, ProUser
 
 
 class AdminMeetup(admin.ModelAdmin):
@@ -10,4 +10,6 @@ class AdminMeetup(admin.ModelAdmin):
 
 admin.site.register(Meetup, AdminMeetup)
 admin.site.register(Location)
+admin.site.register(CustomUser)
+admin.site.register(ProUser)
 

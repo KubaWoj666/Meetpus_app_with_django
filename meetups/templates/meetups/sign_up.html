@@ -1,0 +1,27 @@
+{% extends '_base.html' %}
+{% load static %}
+
+
+
+{% block css %}
+    <link rel="stylesheet" href="">
+{% endblock css %}
+
+
+{% block title %}
+    SignUP
+{% endblock title %}
+    
+    
+
+{% block content %}
+    <h2>hello</h2>
+    <form action="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+
+        <button type="submit">Send</button>
+
+    </form>
+{% endblock content %}
+    

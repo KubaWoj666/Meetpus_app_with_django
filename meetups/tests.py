@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.urls import reverse, resolve
 from django.utils import timezone
 
-
 import datetime
 
 from .views import home_view, detail_view
