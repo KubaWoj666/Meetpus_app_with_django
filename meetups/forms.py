@@ -1,6 +1,6 @@
 from django.forms import ModelForm, DateInput, TextInput
 
-from.models import Meetup, User, ProUser
+from.models import Meetup, Location, User, ProUser
 
 
 class MeetupForm(ModelForm):
@@ -12,9 +12,13 @@ class MeetupForm(ModelForm):
             
         }
 
+class LocationForm(ModelForm):
+    class Meta:
+        model = Location
+        fields = "__all__"
+
         
                     
-        
 
 class UserCreationForm(ModelForm):
     class Meta:

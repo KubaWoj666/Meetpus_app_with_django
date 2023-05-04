@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.utils.text import slugify
 
 from.models import Meetup, User, ProUser
-from .forms import UserCreationForm, MeetupForm
+from .forms import UserCreationForm, MeetupForm, LocationForm
 
 
 def home_view(request):
@@ -78,24 +78,63 @@ def sign_up_view(request):
     return render(request, "meetups/sign_up.html", context)
     
 
+# def create_meetup_view(request):
+#     location_form = LocationForm()
+
+#     if request.method == "POST":
+#         form = MeetupForm(request.POST, request.FILES)
+#         location_form = LocationForm(request.POST)
+#         if location_form.is_valid() :
+#             location = location_form.save()
+#             print(location_form.cleaned_data)
+#             if form.is_valid():
+#                 meetup = form.save(commit=False)
+#                 meetup.location = location
+
+#                 print(form.cleaned_data)
+#                 return redirect("create-meetup")
+#         #     meetup = form.save(commit=False)
+#         #     meetup.slug = slugify(meetup.title)
+#         #     meetup.save()
+#         #     print(meetup.slug)
+            
+#             return redirect("create-meetup")
+#     else:
+#         form = MeetupForm
+        
+            
+#     context = {
+#         "form":form,
+#         "location_form":location_form
+#     }
+
+#     return render(request, "meetups/create_meetup.html", context)
+
 def create_meetup_view(request):
+    location_form = LocationForm()
 
-
+    
     if request.method == "POST":
         form = MeetupForm(request.POST, request.FILES)
+        location_form = LocationForm(request.POST)
+        if location_form.is_valid():
+            location = location_form.save()
+            redirect("create-meetup")
+
         if form.is_valid():
             meetup = form.save(commit=False)
             meetup.slug = slugify(meetup.title)
+            # meetup.location = location
             meetup.save()
-            print(meetup.slug)
-            # print(form.cleaned_data)
-
             return redirect("home")
+
     else:
-        form = MeetupForm
-            
+        form = MeetupForm()
+
     context = {
-        "form":form
+        "form": form,
+        "location_form": location_form
     }
 
     return render(request, "meetups/create_meetup.html", context)
+
