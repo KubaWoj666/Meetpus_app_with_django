@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from django.utils.text import slugify
+from django.core.exceptions import ValidationError
 
 from.models import Meetup, User, ProUser
 from .forms import UserCreationForm, MeetupForm, LocationForm
@@ -63,78 +64,56 @@ def search_meetups(request):
     return render(request, "meetups/search.html", context)
 
 
-def sign_up_view(request):
-    form = UserCreationForm()
-
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            pass
-
-    context = {
-        "form":form
-    }
-
-    return render(request, "meetups/sign_up.html", context)
-    
-
-# def create_meetup_view(request):
-#     location_form = LocationForm()
-
-#     if request.method == "POST":
-#         form = MeetupForm(request.POST, request.FILES)
-#         location_form = LocationForm(request.POST)
-#         if location_form.is_valid() :
-#             location = location_form.save()
-#             print(location_form.cleaned_data)
-#             if form.is_valid():
-#                 meetup = form.save(commit=False)
-#                 meetup.location = location
-
-#                 print(form.cleaned_data)
-#                 return redirect("create-meetup")
-#         #     meetup = form.save(commit=False)
-#         #     meetup.slug = slugify(meetup.title)
-#         #     meetup.save()
-#         #     print(meetup.slug)
-            
-#             return redirect("create-meetup")
-#     else:
-#         form = MeetupForm
-        
-            
-#     context = {
-#         "form":form,
-#         "location_form":location_form
-#     }
-
-#     return render(request, "meetups/create_meetup.html", context)
-
 def create_meetup_view(request):
-    location_form = LocationForm()
+    error_message = None
 
-    
-    if request.method == "POST":
-        form = MeetupForm(request.POST, request.FILES)
-        location_form = LocationForm(request.POST)
-        if location_form.is_valid():
-            location = location_form.save()
-            redirect("create-meetup")
+    try:
+        if request.method == "POST":
+            form = MeetupForm(request.POST, request.FILES)
+            if form.is_valid():
+                meetup = form.save(commit=False)
+                meetup.slug = slugify(meetup.title)
+                meetup.save()
+                return redirect("home")
+        else:
+            form = MeetupForm
+                
+        context = {
+            "form":form
+        }
+    except ValidationError as err:
+        form = MeetupForm
+        error_message = ", ".join(err)
+        print(error_message)
 
-        if form.is_valid():
-            meetup = form.save(commit=False)
-            meetup.slug = slugify(meetup.title)
-            # meetup.location = location
-            meetup.save()
-            return redirect("home")
+        context = {
+            "form" : form,
+            "error_message": error_message
+        }
+        return render(request, "meetups/create_meetup.html", context)
 
-    else:
-        form = MeetupForm()
-
-    context = {
-        "form": form,
-        "location_form": location_form
-    }
 
     return render(request, "meetups/create_meetup.html", context)
 
+
+def add_new_location_view(request):
+    if request.method == "POST":
+        form = LocationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # return redirect("create-meetup")
+    else:
+        form = LocationForm
+
+    context = {
+        "form": form
+    }
+
+    return render(request, "meetups/create_location.html", context )
+        
+
+
+def sign_up_view(request):
+    
+    return render(request, "meetups/sign_up.html", {})
+    

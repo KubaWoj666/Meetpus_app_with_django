@@ -9,7 +9,7 @@ class CustomUser(User):
     pass
 
 class ProUser(CustomUser):
-    is_creator = models.BooleanField(default=False)
+    is_creator = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "ProUsers"

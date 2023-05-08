@@ -1,49 +1,31 @@
 {% extends '_base.html' %}
-{% load crispy_forms_tags %}
+
 {% load static %}
 
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'meetups/style/form.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css" />
 {% endblock css %}
     
 
 
 {% block content %}
 
-<!-- Modal -->
-<div class="modal fade" id="MyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+
+    <!-- Modal -->
+    <div id="modal" class="modal fade">
+        <div id="dialog" class="modal-dialog" hx-target="this">
+
         </div>
-        <div class="modal-body">
-            <form class="form"  method="post"  enctype="multipart/form-data">
-                {% csrf_token %}
-                
-                {% for field in location_form %}
-                    <div class="forms-control {% if field.errors %} errors {% endif %}">
-                        {{field.label_tag}}
-                        {{field}}
-                        {{field.errors}} 
-                    </div>
-                {% endfor %}
-                <button type="save" class="btn btn-primary">Save changes</button>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          
-        </div>
-      </div>
     </div>
-  </div>
 
-
+  
 <form class="form"  method="post"  enctype="multipart/form-data">
     {% csrf_token %}
+    
+    
     
     {% for field in form %}
         <div class="forms-control {% if field.errors %} errors {% endif %}">
@@ -52,14 +34,17 @@
             {{field.errors}} 
         </div>
     {% endfor %}
-    <button id="add_location" type="button" class="button-form" data-bs-toggle="modal" data-bs-target="#MyModal">Add new location</button>
-    <button class="button-form" type="submit">Create Meetup</button>
+    <button hx-get="{% url 'create-location' %}" hx-target="#dialog" id="add_location" type="button" class="button-form" data-bs-toggle="modal" data-bs-target="#MyModal">Add new location</button>
+    <button id="meetup_button" class="button-form" type="submit">Create Meetup</button>
 </form>
 
 
-
-
-<script src="{% static 'meetups/js/create_meetup.js' %}"></script>
+    
 
 {% endblock content %}
+
+
+
+    
+
     

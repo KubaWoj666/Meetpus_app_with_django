@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import home_view, all_meetups_view, detail_view, search_meetups, create_meetup_view ,sign_up_view
+from .views import home_view, all_meetups_view, detail_view, search_meetups, create_meetup_view ,sign_up_view, add_new_location_view
 
 urlpatterns = [
     path("", view=home_view, name="home"),
@@ -8,6 +8,8 @@ urlpatterns = [
     path("meetups/all-meetups", view=all_meetups_view, name="all-meetups"),
     path("meetups/search", view=search_meetups, name="search"),
     path("meetups/create", view=create_meetup_view, name="create-meetup"),
+    path("meetups/create/location", view=add_new_location_view, name="create-location"),
+    
     path("meetups/profile/sing-up",view=sign_up_view, name="sign-up")
     
 ]

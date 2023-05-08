@@ -43,6 +43,8 @@ INSTALLED_APPS = [
       # 3rd Party
     "crispy_forms",  # new
     "crispy_bootstrap5",  # new
+
+    "django_htmx",
 ]
 
 MIDDLEWARE = [
@@ -53,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    "django_htmx.middleware.HtmxMiddleware"
 ]
 
 ROOT_URLCONF = 'django_project.urls'
