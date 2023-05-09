@@ -119,3 +119,4 @@ def sign_up_view(request):
     
     return render(request, "meetups/sign_up.html", {})
     
+
