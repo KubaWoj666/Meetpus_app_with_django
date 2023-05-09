@@ -1,3 +1,4 @@
+
 {% extends '_base.html' %}
 
 {% load static %}
@@ -22,19 +23,16 @@
     </div>
 
   
-<form class="form"  method="post"  enctype="multipart/form-data">
+<form   class="form"  method="post"  enctype="multipart/form-data" >
     {% csrf_token %}
-    
-    
-    
     {% for field in form %}
-        <div class="forms-control {% if field.errors %} errors {% endif %}">
+        <div  class="forms-control {% if field.errors %} errors {% endif %}" >
             {{field.label_tag}}
             {{field}}
             {{field.errors}} 
         </div>
     {% endfor %}
-    <button hx-get="{% url 'create-location' %}" hx-target="#dialog" id="add_location" type="button" class="button-form" data-bs-toggle="modal" data-bs-target="#MyModal">Add new location</button>
+    <button hx-get="{% url 'create-location' %}" hx-target="#dialog"  id="add_location" type="button" class="button-form" >Add new location</button>
     <button id="meetup_button" class="button-form" type="submit">Create Meetup</button>
 </form>
 
@@ -43,8 +41,3 @@
 
 {% endblock content %}
 
-
-
-    
-
-    

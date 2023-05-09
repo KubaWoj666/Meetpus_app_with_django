@@ -1,7 +1,9 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Q
-from django.utils.text import slugify
 from django.core.exceptions import ValidationError
+from django.db.models import Q
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.text import slugify
+
 
 from.models import Meetup, User, ProUser
 from .forms import UserCreationForm, MeetupForm, LocationForm
@@ -101,7 +103,7 @@ def add_new_location_view(request):
         form = LocationForm(request.POST)
         if form.is_valid():
             form.save()
-            # return redirect("create-meetup")
+            return HttpResponse(status=204, headers={'HX-Trigger': 'movieListChanged'})
     else:
         form = LocationForm
 

@@ -15,38 +15,12 @@
     </div>
     <div class="modal-footer">
       <button type="button" data-bs-dismiss="modal">Cancel</button>
-      <button id="save-btn" type="submit">Save</button>
+      <button  id="save-btn" type="submit" >Save</button>
     </div>
   </form>
 
-  <script src="{% static 'meetups/js/create_location.js' %}"></script>
+
 
 
  
- {% comment %}
-        
-<!-- <div class="modal-content">
-    <div class="modal-header">
-      <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
-        <form class="form"  method="post"  enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            {% for field in location_form %}
-                <div class="forms-control {% if field.errors %} errors {% endif %}">
-                    {{field.label_tag}}
-                    {{field}}
-                    {{field.errors}} 
-                </div>
-            {% endfor %}
-            <button type="save" class="btn btn-primary">Save changes</button>
-        </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      
-    </div>
-  </div> -->
- {% endcomment %}
+
