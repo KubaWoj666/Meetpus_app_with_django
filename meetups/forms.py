@@ -1,18 +1,21 @@
-from django.forms import ModelForm, DateInput, TextInput
+from django import forms
 
-from.models import Meetup, Location, User, ProUser
+from django.contrib.auth.models import User, Group
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
+from.models import Meetup, Location
 
 
-class MeetupForm(ModelForm):
+class MeetupForm(forms.ModelForm):
     class Meta:
         model = Meetup
         exclude = ["created", "slug" ]
         widgets = {
-            "date": DateInput(attrs={'type': 'date'}),
+            "date": forms.DateInput(attrs={'type': 'date'}),
             
         }
 
-class LocationForm(ModelForm):
+class LocationForm(forms.ModelForm):
     class Meta:
         model = Location
         fields = "__all__"
@@ -20,7 +23,21 @@ class LocationForm(ModelForm):
         
                     
 
-class UserCreationForm(ModelForm):
+# class UserCreationForm(forms.ModelForm):
+#     group = forms.ModelChoiceField(queryset=Group.objects.all(), required=True)
+
+#     class Meta:
+#         model = User
+#         fields = ["username",  "email", "password1", "password2", "group"]
+
+class UserCreationForm(UserCreationForm):
+    # group = forms.ModelChoiceField(queryset=Group.objects.all(),
+    #                                required=True)
+    
     class Meta:
         model = User
-        fields = ["username", "first_name", "last_name", "email", "password", ]
+        fields = ['username','email']
+# class LoginForm(AuthenticationForm):
+#     class Meta:
+#         model = User
+#         fields = ["username", "password"]

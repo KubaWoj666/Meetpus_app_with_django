@@ -1,19 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 
 import datetime
 
-class CustomUser(User):
-    pass
-
-class ProUser(CustomUser):
-    is_creator = models.BooleanField(default=True)
-
-    class Meta:
-        verbose_name_plural = "ProUsers"
-
+class Company(models.Model):
+    name = models.CharField(max_length=200)
+    
 
 
 

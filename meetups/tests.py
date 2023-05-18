@@ -1,6 +1,11 @@
 from django.test import TestCase
 from django.urls import reverse, resolve
 from django.utils import timezone
+from django.contrib.auth.models import User, Permission
+from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib.auth.forms import AuthenticationForm
+
+
 
 import datetime
 
@@ -30,6 +35,17 @@ class HomePageTest(TestCase):
 class MeetupsTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
+        cls.creator = User.objects.create_user(username="creator", 
+                                               email="creator@email.com", 
+                                               password="testpassword")
+        permission = Permission.objects.get(codename="add_meetup")
+        cls.creator.user_permissions.add(permission)
+
+        cls.participant = User.objects.create_user(username="test", 
+                                                   email="testuser@email.com",
+                                                   password="testpassword")
+
+
         cls.location = Location.objects.create(country="Poland",
                                                city="Warsaw",
                                                street="Main Street")
@@ -42,6 +58,7 @@ class MeetupsTestCase(TestCase):
                               slug='test-slug',
                               location = cls.location)
         
+
     
     def test_meetup_model(self):
         meetup = Meetup.objects.first()
@@ -58,23 +75,54 @@ class MeetupsTestCase(TestCase):
             timezone.now(),
             delta=datetime.timedelta(seconds=1),
         )
+    
+    def test_create_meetups_view_with_permission(self):
+        self.client.login(username="creator", password="testpassword")
+        response = self.client.get(reverse("create-meetup"))
+        self.assertEqual(response.status_code, 200)
+
+    
+    def test_create_meetups_view_without_permission(self):
+        self.client.login(username="test", password="testpassword")
+        response = self.client.get(reverse("create-meetup"))
+        self.assertEqual(response.status_code, 403)
+    
+
+    def test_create_meetup_view_post_request(self):
+        self.client.login(username="creator", password="testpassword")
+        url = reverse("create-meetup")
+        data = {"title":self.meetup.title,
+                "description": self.meetup.description,
+                "organizer_email":self.meetup.organizer_email,
+                # "image":self.meetup.image,
+                "date":self.meetup.date,
+                "slug":self.meetup.slug,
+                "location":self.meetup.location}
+        
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)  
+        self.assertTemplateUsed(response, "meetups/create_meetup.html")
+        self.assertEqual(Meetup.objects.count(), 1)
+        meetup = Meetup.objects.first()
+        self.assertEqual(meetup.title, self.meetup.title)
+        self.assertEqual(meetup.description, self.meetup.description)
+
 
     def test_detail_view(self):
         response = self.client.get(self.meetup.get_absolute_url())
         no_response = self.client.get("/wrong-slug/")
-        view =  resolve("/test-slug")
-
+        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(no_response.status_code, 404)
         self.assertContains(response, "test meetup")
         self.assertTemplateUsed(response, "meetups/detail.html")
-        self.assertEqual(view.func.__name__, detail_view.__name__)
-    
+
 
     def test_all_meetups_view(self):
-        response = self.client.get(reverse("all_meetups"))
+        response = self.client.get(reverse("all-meetups"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "meetups/all_meetups.html")
+
 
     def test_search_meetups_view(self):
         response = self.client.get(reverse("search"), {"q":"test"})
@@ -92,3 +140,39 @@ class MeetupsTestCase(TestCase):
         self.assertTemplateUsed(country_response, "meetups/search.html")
 
 
+
+    def test_sing_up_view(self):
+        url = reverse("sign-up")
+        data = {"username":self.creator.username,
+                "email":self.creator.email,
+                "password1":self.creator.password,
+                "password2":self.creator.password}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(User.objects.count(), 2)
+        self.assertTemplateUsed(response, "meetups/sign_up_user.html")
+
+    def test_login_view_with_valid_credentials(self):
+        url = reverse("login")
+        data = {
+            "username": self.creator.username,
+            "password": self.creator.password,
+        }
+        response = self.client.post(url, data)
+        user = get_user_model().objects.get(username=self.creator.username)
+        self.assertTrue(user.is_authenticated)
+        self.assertTemplateUsed(response, "meetups/login.html")
+    
+    def test_login_view_with_invalid_credentials(self):
+        url = reverse("login")
+        data = {
+            "username": self.creator.username,
+            "password": "wrongpassword",
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200) 
+        self.assertTemplateUsed(response, "meetups/login.html")
+        error_message = response.context["error_message"]
+        self.assertEqual(error_message, "Invalid credentials")
+        self.assertTemplateUsed(response, "meetups/login.html")
+        

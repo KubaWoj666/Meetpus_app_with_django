@@ -1,15 +1,18 @@
 from django.urls import path
 
-from .views import home_view, all_meetups_view, detail_view, search_meetups, create_meetup_view ,sign_up_view, add_new_location_view
+from . import views
 
 urlpatterns = [
-    path("", view=home_view, name="home"),
-    path("<slug:slug>", view=detail_view, name="detail"),
-    path("meetups/all-meetups", view=all_meetups_view, name="all-meetups"),
-    path("meetups/search", view=search_meetups, name="search"),
-    path("meetups/create", view=create_meetup_view, name="create-meetup"),
-    path("meetups/create/location", view=add_new_location_view, name="create-location"),
+    path("", views.home_view, name="home"),
+    path("<slug:slug>", views.detail_view, name="detail"),
+    path("meetups/all-meetups", views.all_meetups_view, name="all-meetups"),
+    path("meetups/search", views.search_meetups, name="search"),
+    path("meetups/create", views.create_meetup_view, name="create-meetup"),
+    path("meetups/create/location", views.add_new_location_view, name="create-location"),
     
-    path("meetups/profile/sing-up",view=sign_up_view, name="sign-up")
-    
+    path("meetups/profile/sing-up",views.sign_up_user_view, name="sign-up"),
+    path("meetups/profile/default-or-creator/<int:pk>", views.default_or_creator_view, name="default_or_creator"),
+    path("meetups/profile/logout",views.logout_view, name="logout"),
+    path("meetups/profile/login",views.login_view, name="login"),
+
 ]

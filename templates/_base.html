@@ -35,14 +35,28 @@
               <li class="nav-item nav-underline">
                 <a class="nav-link" href="{% url 'all-meetups' %}">All Meetups</a>
               </li>
-              <li class="nav-item nav-underline">
-                <a class="nav-link" href="{% url 'create-meetup' %}"  >Create Meetup</a>
-              </li>
-
-              <li class="nav-item nav-underline">
-                <a class="nav-link $green-200" href="{% url 'sign-up' %}">Sign Up</a>
-              </li>
+              
+              {% if perms.meetups.add_meetup %}
+                <li class="nav-item nav-underline">
+                  <a class="nav-link" href="{% url 'create-meetup' %}"  >Create Meetup</a>
+                </li>
+              {% endif %}
+              
             </ul>
+            <div>
+              <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                <span class="navbar-text">Logged in as {{user.username}} | </span>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'login' %}">Login</a>
+                </li>
+                {% endif %}
+              </ul>
+            </div>
             <form action="{% url 'search' %}" method="GET" class="d-flex" role="search">
                 {% csrf_token %}
               <input class="form-control me-2" type="search"  name="q" placeholder="Search Meetups" aria-label="Search">

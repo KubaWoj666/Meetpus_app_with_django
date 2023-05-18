@@ -1,5 +1,18 @@
 from django.contrib import admin
-from .models import Meetup, Location, CustomUser, ProUser
+from .models import Meetup, Location
+
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User,Group
+
+class CustomUserAdmin(UserAdmin):
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'group_name')
+    def group_name(self, obj):
+        return obj.groups.first().name if obj.groups.exists() else ''
+    group_name.short_description = 'Group'
+
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
+
 
 
 class AdminMeetup(admin.ModelAdmin):
@@ -10,6 +23,5 @@ class AdminMeetup(admin.ModelAdmin):
 
 admin.site.register(Meetup, AdminMeetup)
 admin.site.register(Location)
-admin.site.register(CustomUser)
-admin.site.register(ProUser)
+
 

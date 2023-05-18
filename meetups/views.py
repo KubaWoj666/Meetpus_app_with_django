@@ -1,13 +1,16 @@
 from django.core.exceptions import ValidationError
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Q
 from django.http import HttpResponse
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.text import slugify
 
-
-from.models import Meetup, User, ProUser
+from django.contrib.auth.models import User, Group
+from.models import Meetup
 from .forms import UserCreationForm, MeetupForm, LocationForm
-
+from django.contrib.auth.forms import AuthenticationForm
 
 def home_view(request):
     meetups = Meetup.objects.all()
@@ -65,10 +68,10 @@ def search_meetups(request):
 
     return render(request, "meetups/search.html", context)
 
-
+@login_required(login_url="login")
+@permission_required("meetups.add_meetup", login_url='/login', raise_exception=True)
 def create_meetup_view(request):
     error_message = None
-
     try:
         if request.method == "POST":
             form = MeetupForm(request.POST, request.FILES)
@@ -86,7 +89,6 @@ def create_meetup_view(request):
     except ValidationError as err:
         form = MeetupForm
         error_message = ", ".join(err)
-        print(error_message)
 
         context = {
             "form" : form,
@@ -97,7 +99,8 @@ def create_meetup_view(request):
 
     return render(request, "meetups/create_meetup.html", context)
 
-
+@login_required(login_url="login")
+@permission_required('meetups.add_location', login_url='/login', raise_exception=True)
 def add_new_location_view(request):
     if request.method == "POST":
         form = LocationForm(request.POST)
@@ -105,7 +108,7 @@ def add_new_location_view(request):
             form.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'movieListChanged'})
     else:
-        form = LocationForm
+        form = LocationForm()
 
     context = {
         "form": form
@@ -115,8 +118,62 @@ def add_new_location_view(request):
         
 
 
-def sign_up_view(request):
+def sign_up_user_view(request):
+    form = UserCreationForm
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("default_or_creator", pk=user.id)
+    else:
+        form = UserCreationForm()
+        
+    context = {
+        "form": form,
+    }
     
-    return render(request, "meetups/sign_up.html", {})
+    return render(request, "meetups/sign_up_user.html", context)
+
+
+def default_or_creator_view(request, pk):
+    if request.method == "POST":
+        user = User.objects.get(id=pk)
+        group = request.POST.get("group")
+        print(group)
+        if group:
+            group_obj = Group.objects.get(name=group)
+            user.groups.add(group_obj)
+            user.save()
+            return redirect("home")
     
+    return render(request, "meetups/default_or_creator.html", {} )
+
+def login_view(request):
+    error_message = None
+    form = AuthenticationForm
+
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect("home")
+        else:
+            error_message = 'Invalid credentials'
+
+    context = {
+        'form':form,
+        'error_message': error_message,
+    }
+    
+    return render(request, "meetups/login.html", context)
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("home")
 

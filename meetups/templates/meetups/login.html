@@ -1,0 +1,30 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'meetups/style/form.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css" />
+{% endblock css %}
+
+{% block title %}
+    Login
+{% endblock title %}
+
+{% block content %}
+    
+<form   class="form"  method="post"  >
+    {% csrf_token %}
+    {% for field in form %}
+        <div  class="forms-control {% if field.errors %} errors {% endif %}" >
+            {{field.label_tag}}
+            {{field}}
+            {{field.errors}} 
+        </div>
+    {% endfor %}
+    <button id="meetup_button" class="button-form" type="submit">login</button>
+    <p>you don't have account? <a href="{% url 'sign-up'%} "> Sign Up</a> </p>
+</form>
+    
+{% endblock content %}

@@ -1,0 +1,38 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css" />
+{% endblock css %}
+
+{% block title %}
+    Sign Up User
+{% endblock title %}
+
+{% block content %}
+<div class="container d-flex justify-content-around ">
+    <div class="card" style="width: 18rem;">
+        <img src="{% static 'meetups/images/company.jpg' %}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Creator</h5>
+          <form   class="form"  method="post"  >
+            {% csrf_token %}
+            <input type="hidden" name="group" value="creator">
+            <p>Continue as a Meetups Creator</p>
+            <button id="meetup_button" class="btn btn-primary" type="submit">Continue</button>
+        </form>
+        </div>
+      </div>
+      <div class="card" style="width: 18rem;">
+        <img src="{% static 'meetups/images/people.png' %}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Participant</h5>
+          <p class="card-text">Continue as a Participant</p>
+          <a href="{% url 'home' %}" class="btn btn-primary">Home</a>
+        </div>
+      </div>
+</div>
+
+{% endblock content%}
