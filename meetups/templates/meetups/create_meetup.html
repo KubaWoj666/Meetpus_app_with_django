@@ -23,18 +23,68 @@
         </div>
     </div>
   
+
+
+    <form class="form" method="post" enctype="multipart/form-data" >
+        {% csrf_token %}
+        
+        <div class="forms-control {% if field.errors %} errors {% endif %} ">
+            <label for="id_title">Title:</label>
+            <input type="text" name="title" id="id_title" required>
+        </div>
+        
+        <div  class="forms-control {% if field.errors %} errors {% endif %} ">
+            <label for="id_description">Description:</label>
+            <textarea name="description" id="id_description" required></textarea>
+        </div>
+        
+        <div  class="forms-control {% if field.errors %} errors {% endif %} ">
+            <label for="id_image">Image:</label>
+            <input type="file" name="image" id="id_image" required>
+        </div>
+        
+        <div  class="forms-control {% if field.errors %} errors {% endif %} ">
+            <label for="id_organizer_email">Organizer Email:</label>
+            <input type="email" name="organizer_email" id="id_organizer_email" required>
+        </div>
+        
+        <div  class="forms-control {% if field.errors %} errors {% endif %} ">
+            <label for="id_date">Date:</label>
+            <input type="date" name="date" id="id_date" required>
+        </div>
+        
+        <div id="chosen_location" class="forms-control {% if field.errors %} errors {% endif %} ">
+            <label for="id_location">Location:</label>
+            <select  name="location" id="id_location" required> 
+                <option  value="">Select location</option>
+                {% for location in locations %}
+                    <option   value="{{ location.pk }}">{{ location.city }} - {{location.street}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button hx-get="{% url 'create-location' %}" hx-target="#dialog"  id="add_location" type="button" class="button-form" >Add new location</button>
+
+        <button id="meetup_button" class="button-form" type="submit">Create Meetup</button>
+    </form>
+    
+    
+<!-- <div>
     <form   class="form"  method="post"  enctype="multipart/form-data" >
         {% csrf_token %}
         {% for field in form %}
-            <div  class="forms-control {% if field.errors %} errors {% endif %}" >
+            <div class="forms-control {% if field.errors %} errors {% endif %}">
                 {{field.label_tag}}
-                {{field}}
+                {% if field.name == 'location' %}
+                    {{field}}  <button hx-get="{% url 'create-location' %}" hx-target="#dialog"  id="add_location" type="button" class="button-form" >Add new location</button>
+                {% else %}
+                    {{field}}
+                {% endif %}
                 {{field.errors}} 
             </div>
         {% endfor %}
-        <button hx-get="{% url 'create-location' %}" hx-target="#dialog"  id="add_location" type="button" class="button-form" >Add new location</button>
-        <button id="meetup_button" class="button-form" type="submit">Create Meetup</button>
+        <button id="meetup_button" class="button-form" type="submit">Create Meetup</button>  
     </form>
+</div> -->
 
 
 {% endblock content %}

@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.text import slugify
 
 from django.contrib.auth.models import User, Group
-from.models import Meetup
+from.models import Meetup, Location
 from .forms import UserCreationForm, MeetupForm, LocationForm
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -71,6 +71,7 @@ def search_meetups(request):
 @login_required(login_url="login")
 @permission_required("meetups.add_meetup", login_url='/login', raise_exception=True)
 def create_meetup_view(request):
+    locations = Location.objects.all()
     error_message = None
     try:
         if request.method == "POST":
@@ -84,7 +85,8 @@ def create_meetup_view(request):
             form = MeetupForm
                 
         context = {
-            "form":form
+            "form":form,
+            "locations":locations,
         }
     except ValidationError as err:
         form = MeetupForm
@@ -92,6 +94,7 @@ def create_meetup_view(request):
 
         context = {
             "form" : form,
+            "locations":locations,
             "error_message": error_message
         }
         return render(request, "meetups/create_meetup.html", context)
@@ -106,7 +109,7 @@ def add_new_location_view(request):
         form = LocationForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'movieListChanged'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'newLocation'})
     else:
         form = LocationForm()
 
@@ -119,7 +122,7 @@ def add_new_location_view(request):
 
 
 def sign_up_user_view(request):
-    form = UserCreationForm
+    form = UserCreationForm()
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -177,3 +180,9 @@ def logout_view(request):
     logout(request)
     return redirect("home")
 
+
+def get_last_location_view(request):
+    
+    last_loc = Location.objects.last()
+    html = "<label for='id_location'>Location:</label><select name='location' required id='id_location'><option value='%s' selected>%s</option></select>" %(last_loc.id,last_loc)
+    return HttpResponse(html)

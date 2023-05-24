@@ -1,5 +1,3 @@
-
-
  const modalElement = document.getElementById("modal");
  
  if (modalElement) {

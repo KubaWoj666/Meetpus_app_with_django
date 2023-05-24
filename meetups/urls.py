@@ -16,3 +16,9 @@ urlpatterns = [
     path("meetups/profile/login",views.login_view, name="login"),
 
 ]
+
+htmx_urlpatterns = [
+    path("htmx/last_loc", views.get_last_location_view, name="last_location")
+]
+
+urlpatterns += htmx_urlpatterns
