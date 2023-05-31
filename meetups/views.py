@@ -283,5 +283,5 @@ def delete_meetup_view(request, slug):
     context = {
         "meetups":meetups,
         }
-    return render(request, "meetups/creator_panel.html", context )
+    return render(request, "meetups/includes/meetup-list.html", context )
     
