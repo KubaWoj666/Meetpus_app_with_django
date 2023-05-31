@@ -1,21 +1,37 @@
-
 {% load static %}
+{% load widget_tweaks %}
 <form hx-post="{{ request.path }}" class="modal-content">
     {% csrf_token %}
     <div class="modal-header">
       <h5 class="modal-title">Add new location</h5>
     </div>
     <div class="modal-body">
-        {% for field in form %}
+      <div class="forms-control {% if field.errors %} errors {% endif %} ">
+        <label>{{ form.country.label_tag }}</label>
+        {{ form.country.errors }}
+        {% render_field form.country class="form-control"  name="country" id="id_country"%}
+      </div>
+      <div class="forms-control {% if field.errors %} errors {% endif %} ">
+        <label>{{ form.city.label_tag }}</label>
+        {{ form.city.errors }}
+        {% render_field form.city class="form-control"  name="city" id="id_city"%}
+      </div>
+      <div class="forms-control {% if field.errors %} errors {% endif %} ">
+        <label>{{ form.street.label_tag }}</label>
+        {{ form.street.errors }}
+        {% render_field form.street class="form-control"  name="street" id="id_street"%}
+      </div>
+        <!-- {% for field in form %}
         <div class="forms-control {% if field.errors %} errors {% endif %}">
             {{field.label_tag}}
             {{field}}
             {{field.errors}} 
         </div>
-        {% endfor %}
+        {% endfor %} -->
     </div>
     <div class="modal-footer">
       <button type="button" data-bs-dismiss="modal">Cancel</button>
+      <!-- <button  id="save-btn" type="submit" >Save</button> -->
       <button hx-trigger="load, newLocation from:body" hx-get="{% url 'last_location' %}" hx-target="#chosen_location" id="save-btn" type="submit" >Save</button>
     </div>
   </form>

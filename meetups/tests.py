@@ -56,7 +56,8 @@ class MeetupsTestCase(TestCase):
                               image="test.jpg",
                               date=timezone.now().date() + datetime.timedelta(days=1),
                               slug='test-slug',
-                              location = cls.location)
+                              location = cls.location,
+                              organizer=cls.creator)
         
 
     

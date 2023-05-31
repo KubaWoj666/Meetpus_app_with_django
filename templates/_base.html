@@ -40,6 +40,9 @@
                 <li class="nav-item nav-underline">
                   <a class="nav-link" href="{% url 'create-meetup' %}"  >Create Meetup</a>
                 </li>
+                <li class="nav-item nav-underline">
+                  <a class="nav-link" href="{% url 'creator-panel' request.user.id %}">Creator Panel</a>
+                </li>
               {% endif %}
               
             </ul>
@@ -89,6 +92,13 @@
 
     <script src="{% static 'meetups/js/create_meetup.js' %}"></script>
     <script src="{% static 'meetups/js/create_location.js' %}"></script>
+
+    <!-- for delete meetup -->
+    <script>
+      document.body.addEventListener('htmx:configRequest', function(evt) {
+        evt.detail.headers['X-CSRFToken'] = '{{csrf_token}}'; 
+    });
+    </script>
 
 </body>
 </html>

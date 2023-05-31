@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Meetup, Location
+from .models import Meetup, Location, Company
 
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User,Group
@@ -16,12 +16,20 @@ admin.site.register(User, CustomUserAdmin)
 
 
 class AdminMeetup(admin.ModelAdmin):
-    list_display = ["title", "date", "created", "location"]
+    list_display = [ "organizer", "title", "date", "created", "location", "get_participants"]
     prepopulated_fields = {"slug":["title"]}
     list_filter = ("date", "title")
+
+    def get_participants(self, obj):
+        return ", ".join([str(participant) for participant in obj.participants.all()])
+    get_participants.short_description = 'Participants'
 
 
 admin.site.register(Meetup, AdminMeetup)
 admin.site.register(Location)
+
+class AdminCompany(admin.ModelAdmin):
+    list_display = ["creator", "name"]
+admin.site.register(Company, AdminCompany)
 
 

@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Q
@@ -9,7 +10,7 @@ from django.utils.text import slugify
 
 from django.contrib.auth.models import User, Group
 from.models import Meetup, Location
-from .forms import UserCreationForm, MeetupForm, LocationForm
+from .forms import UserCreationForm, MeetupForm, LocationForm, CompanyForm, ParticipantForm
 from django.contrib.auth.forms import AuthenticationForm
 
 def home_view(request):
@@ -27,14 +28,49 @@ def home_view(request):
 
     return render(request, "meetups/home.html", context)
 
+@login_required(login_url="login")
+@permission_required("meetups.add_meetup", login_url='/login', raise_exception=True)
+def creator_panel_view(request, pk):
+    user = User.objects.get(id=pk)
+    meetups = Meetup.objects.filter(organizer=user)
+
+    context = {
+        "meetups":meetups,
+        }
+
+    return render(request, "meetups/creator_panel.html", context)
+
 
 def detail_view(request, slug):
+    error_message=None
     try:
         meetup = Meetup.objects.get(slug=slug)
+        if request.method == "GET":
+            form = ParticipantForm(initial={'email': request.user.email})
+            print(request.method)
 
+        else:
+            form = ParticipantForm(request.POST, initial={'email': request.user.email})
+            if form.is_valid():
+                email = form.cleaned_data["email"]
+                participant = User.objects.get(email=email)
+                meetup.participants.add(participant)
+                # messages.success(request, f"You have been successfully sing up for {meetup} meetup.")
+                # print(messages)
+                error_message = f"You have been successfully sing up for {meetup} meetup"
+                print(error_message)
+               
+
+            else:
+                # messages.error(request, "Ups Something something went wrong!")
+                error_message = "Ups Something something went wrong"
+            
         context = {
             "meetup":meetup,
-            "meetup_exist":True
+            "meetup_exist":True,
+            "form":form,
+            "error_message":error_message
+            
         }
         return render(request, "meetups/detail.html" ,context)
     
@@ -68,6 +104,7 @@ def search_meetups(request):
 
     return render(request, "meetups/search.html", context)
 
+
 @login_required(login_url="login")
 @permission_required("meetups.add_meetup", login_url='/login', raise_exception=True)
 def create_meetup_view(request):
@@ -79,17 +116,15 @@ def create_meetup_view(request):
             if form.is_valid():
                 meetup = form.save(commit=False)
                 meetup.slug = slugify(meetup.title)
+                print("opa")
+                meetup.organizer = request.user
                 meetup.save()
                 return redirect("home")
         else:
-            form = MeetupForm
-                
-        context = {
-            "form":form,
-            "locations":locations,
-        }
+            form = MeetupForm()
+
     except ValidationError as err:
-        form = MeetupForm
+        form = MeetupForm()
         error_message = ", ".join(err)
 
         context = {
@@ -99,19 +134,30 @@ def create_meetup_view(request):
         }
         return render(request, "meetups/create_meetup.html", context)
 
+    context = {
+        "form":form,
+        "locations":locations,
+        }
 
     return render(request, "meetups/create_meetup.html", context)
+
+
 
 @login_required(login_url="login")
 @permission_required('meetups.add_location', login_url='/login', raise_exception=True)
 def add_new_location_view(request):
+    print(request.method)
     if request.method == "POST":
         form = LocationForm(request.POST)
         if form.is_valid():
+            city = form.cleaned_data.get('city') 
+            street = form.cleaned_data.get('street') 
+            # print(city)
             form.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'newLocation'})
     else:
         form = LocationForm()
+        
 
     context = {
         "form": form
@@ -143,18 +189,36 @@ def default_or_creator_view(request, pk):
     if request.method == "POST":
         user = User.objects.get(id=pk)
         group = request.POST.get("group")
-        print(group)
         if group:
             group_obj = Group.objects.get(name=group)
             user.groups.add(group_obj)
             user.save()
-            return redirect("home")
-    
+            return redirect("create-company", pk=pk)
+        
     return render(request, "meetups/default_or_creator.html", {} )
+
+def create_company_view(request, pk):
+    if request.method == "POST":
+        user = User.objects.get(id=pk)
+        form = CompanyForm(request.POST)
+        if form.is_valid():
+            company = form.save(commit=False)
+            company.creator = user
+            company.save()
+            return redirect("creator-panel", pk=pk)
+    else:
+        form = CompanyForm()
+    
+    context = {
+        "form": form
+    }
+
+    return render(request, "meetups/create_company.html", context )
+        
 
 def login_view(request):
     error_message = None
-    form = AuthenticationForm
+    form = AuthenticationForm()
 
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -181,8 +245,43 @@ def logout_view(request):
     return redirect("home")
 
 
+# ==== HTMX views ====
+
 def get_last_location_view(request):
-    
     last_loc = Location.objects.last()
+    # html = "<div id='chosen_location' class='forms-control {% if field.errors %} errors {% endif %}' ><label>{{ form.location.label_tag }}</label>{{ form.location.errors }}{% render_field form.location class='form-control' }<button hx-get='/htmx/last_loc' hx-target='#dialog'  id='add_location' type='button' class='button-form mt-2' >Add new location</button></div>"
     html = "<label for='id_location'>Location:</label><select name='location' required id='id_location'><option value='%s' selected>%s</option></select>" %(last_loc.id,last_loc)
     return HttpResponse(html)
+    # if request.method == 'POST':
+    #     city = request.POST.get("city")
+    #     street = request.POST.get("street")
+
+    #     print(city)
+    #     print(street)
+
+    #     # Przykładowa logika obsługi danych i zapisywania do bazy danych
+    #     # html = "<label for='id_location'>Location:</label><select name='location' required id='id_location'><option value='%s' selected>%s</option></select>" %(last_loc.id,last_loc)
+
+    #     return HttpResponse(status=200)
+  
+def check_username_view(request):
+    username = request.POST.get("username")
+    if User.objects.filter(username=username).exists():
+        return HttpResponse("<div id='username-error' class='error'>This username already exists</div>")
+    else:
+        return HttpResponse("<div id='username-error' class='success'>This username ia available</color=>")
+
+
+
+def delete_meetup_view(request, slug):
+    user = request.user.id
+    meetup = Meetup.objects.get(slug=slug)
+    meetup.delete()
+
+    meetups = Meetup.objects.filter(organizer=user)
+
+    context = {
+        "meetups":meetups,
+        }
+    return render(request, "meetups/creator_panel.html", context )
+    

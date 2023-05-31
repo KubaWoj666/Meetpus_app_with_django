@@ -12,13 +12,18 @@ urlpatterns = [
     
     path("meetups/profile/sing-up",views.sign_up_user_view, name="sign-up"),
     path("meetups/profile/default-or-creator/<int:pk>", views.default_or_creator_view, name="default_or_creator"),
+    path("meetups/profile/company-info/<int:pk>", views.create_company_view, name="create-company"),
     path("meetups/profile/logout",views.logout_view, name="logout"),
     path("meetups/profile/login",views.login_view, name="login"),
+
+    path ("meetups/creator-panel/<int:pk>", views.creator_panel_view, name="creator-panel")
 
 ]
 
 htmx_urlpatterns = [
-    path("htmx/last_loc", views.get_last_location_view, name="last_location")
+    path("htmx/last_loc", views.get_last_location_view, name="last_location"),
+    path("htmx/check_username", views.check_username_view, name="check-username"),
+    path("htmx/delete-meetup/<slug:slug>", views.delete_meetup_view, name="delete_meetup")
 ]
 
 urlpatterns += htmx_urlpatterns

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css" />
 {% endblock css %}
 
+
 {% block title %}
     Sign Up User
 {% endblock title %}
@@ -21,7 +22,7 @@
             {% csrf_token %}
             <input type="hidden" name="group" value="creator">
             <p>Continue as a Meetups Creator</p>
-            <button id="meetup_button" class="btn btn-primary" type="submit">Continue</button>
+            <button id="meetup_button" class="btn btn-primary" type="submit" >Continue</button>
         </form>
         </div>
       </div>
@@ -35,4 +36,9 @@
       </div>
 </div>
 
+
+
 {% endblock content%}
+
+
+<!-- "{% url 'create-company' user.id %}" -->

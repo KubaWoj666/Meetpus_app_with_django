@@ -7,7 +7,15 @@ import datetime
 
 class Company(models.Model):
     name = models.CharField(max_length=200)
+    country = models.CharField(max_length=200)
+    city = models.CharField(max_length=200)
+    street = models.CharField(max_length=200)
+    # NIP = models.IntegerField(max_length=10)
+    creator = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
     
+    def __str__(self) -> str:
+        return self.name
+
 
 
 
@@ -30,6 +38,8 @@ class Meetup(models.Model):
     slug = models.SlugField(unique=True)
     created = models.DateTimeField(auto_now_add=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE)
+    participants = models.ManyToManyField(User, blank=True, null=True, related_name="participants")
     
     
 

@@ -14,11 +14,11 @@
     <h2>We have {{ count_meetups }} meetups</h2>
 </section>
 
-<section>
+<section >
     <h2 class="header">Latest meetups</h2>
-    <ol>
+    <ol class="container  d-flex justify-content-around  ">
         {% for meetup in latest_meetups %}
-        <li class="meetup-item">
+        <li class="meetup-item me-2">
             <article>
                 <div class="meetup-summary">
                     <div class="meetup-image">
@@ -40,9 +40,9 @@
 
 <section>
     <h2 class="header">Ends Soon</h2>
-    <ol>
+    <ol class="container  d-flex justify-content-around  ">
         {% for meetup in end_soon_meetups %}
-        <li class="meetup-item">
+        <li class="meetup-item me-2">
             <article>
                 <div class="meetup-summary">
                     <div class="meetup-image">

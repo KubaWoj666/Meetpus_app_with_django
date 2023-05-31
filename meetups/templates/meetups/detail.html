@@ -1,8 +1,10 @@
 {% extends '_base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'meetups/style/detail.css' %}">
+    <link rel="stylesheet" href="{% static 'meetups/style/form.css' %}">
 {% endblock css %}
     
 {% block title %}
@@ -26,11 +28,31 @@
                 <p>{{ meetup.description }}</p>
                 <footer>Need more details? Please <a href="mailto:{{meetup.organizer_email}}">contact the organizer</a>.</footer>
             </section>
+            <button class="btn btn-primary mt-3" type="submit">Maybe</button>
+            
+            
         </article>
+        
+
+        <form   class="form"  method="post"  >
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="forms-control {% if field.errors %} errors {% endif %}">
+                    <label>{{ form.email.label_tag }}</label>
+                    {{ form.email.errors }}
+                    {% render_field form.email class="form-control" placeholder="{{request.user.email}}"%}
+                <div id="email-error"></div>
+            {% endfor %}
+            <button id="meetup_button" class="button-form mt-2" type="submit">Sign Me Up</button>
+        </form>
+
+        
 
     {% else %}
     <h2>no meetup</h2>
 
     {% endif %}
+
+   
 {% endblock content %}
     

@@ -10,3 +10,14 @@
     
 }
 
+.success{
+    color: green;
+    transition: all ease-in 1s;
+
+}
+
+.error{
+    color: red;
+    transition: all ease-in 1s;
+
+}

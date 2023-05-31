@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     'meetups',
 
       # 3rd Party
-    "crispy_forms",  # new
-    "crispy_bootstrap5",  # new
+    'crispy_forms',  # new
+    'crispy_bootstrap5',
+    'widget_tweaks',  # new
 
     "django_htmx",
 ]
