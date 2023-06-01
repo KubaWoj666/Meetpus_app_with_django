@@ -8,7 +8,7 @@
     <p class="card-text">{{meetup.organizer_email}}</p>
     <p class="card-text">{{meetup.location}}</p>
     <p class="card-text">participants: {{meetup.participants.count}}</p>
-    <button class="btn btn-success" type="submit">Update</button>
+    <a href="{% url 'update_meetup' meetup.slug %}" class="btn btn-success" type="submit">Update</a>
     <button hx-delete="{% url 'delete_meetup' meetup.slug %}" hx-target="#meetups-list" hx-confirm="Are you sure you wish to delete" class="btn btn-danger" type="submit">Delete</button>
     </div>
 </div>

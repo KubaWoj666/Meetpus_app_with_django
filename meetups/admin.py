@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User,Group
 
 class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'group_name')
+    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'group_name')
     def group_name(self, obj):
         return obj.groups.first().name if obj.groups.exists() else ''
     group_name.short_description = 'Group'

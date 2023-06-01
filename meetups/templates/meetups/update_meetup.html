@@ -1,0 +1,84 @@
+
+{% extends '_base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}
+    Create Meetup
+{% endblock title %}
+    
+{% block css %}
+    <link rel="stylesheet" href="{% static 'meetups/style/form.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css" />
+{% endblock css %}
+    
+{% block content %}
+
+
+
+    <!-- Modal -->
+    
+    <div id="modal" class="modal fade">
+        <div id="dialog" class="modal-dialog" hx-target="this">
+
+        </div>
+    </div>
+  
+
+
+    <form class="form"  method="post" enctype="multipart/form-data" >
+        {% csrf_token %}
+        <div class="forms-control {% if field.errors %} errors {% endif %} ">
+            <label>{{ form.title.label_tag }}</label>
+            {{ form.title.errors }}
+            {% render_field form.title class="form-control"  name="title" id="id_title"%}
+        </div>
+        
+        <div  class="forms-control {% if field.errors %} errors {% endif %} ">
+            <label>{{ form.description.label_tag }}</label>
+            {{ form.description.errors }}
+            {% render_field form.description class="form-control"  name="description" id="id_description"%}
+        </div>
+        
+        <div  class="forms-control {% if field.errors %} errors {% endif %} ">
+            <label>{{ form.image.label_tag }}</label>
+            {{ form.image.errors }}
+            {% render_field form.image class="form-control"  name="image" id="id_image"%}
+        </div>
+        
+        <div  class="forms-control {% if field.errors %} errors {% endif %} ">
+            <label>{{ form.organizer_email.label_tag }}</label>
+            {{ form.organizer_email.errors }}
+            {% render_field form.organizer_email class="form-control"  name="organizer_email" id="id_organizer_email"%}
+        </div>
+        
+        <div  class="forms-control {% if field.errors %} errors {% endif %} ">
+            <label>{{ form.date.label_tag }}</label>
+            {{ form.date.errors }}
+            {% render_field form.date class="form-control"  name="date" id="id_date"%}
+        </div>
+
+        <!-- <div id="chosen_location" class="forms-control {% if field.errors %} errors {% endif %} " >
+            <label>{{ form.location.label_tag }}</label>
+            {{ form.location.errors }}
+            {% render_field form.location class="form-control" hx-post="/htmx/check_username" hx-swap="innerHTML" hx-trigger="keyup delay:1s" hx-target="#username-error"%}
+        </div> -->
+        
+        <div id="chosen_location" class="forms-control {% if field.errors %} errors {% endif %} ">
+            <label for="id_location">Location:</label>
+            <select  name="location" id="id_location" required> 
+                <option  value="">Select location</option>
+                {% for location in locations %}
+                    <option   value="{{ location.pk }}">{{ location.city }} - {{location.street}}</option>
+                {% endfor %}
+            </select>
+            <button hx-get="{% url 'create-location' %}"  hx-target="#dialog"  id="add_location" type="button" class="button-form mt-2" >Add new location</button>
+        </div>
+
+        <button id="meetup_button" class="button-form" type="submit">Update Meetup</button>
+    </form>
+
+
+        
+    {% endblock content %}
+        

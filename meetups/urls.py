@@ -16,7 +16,9 @@ urlpatterns = [
     path("meetups/profile/logout",views.logout_view, name="logout"),
     path("meetups/profile/login",views.login_view, name="login"),
 
-    path ("meetups/creator-panel/<int:pk>", views.creator_panel_view, name="creator-panel")
+    path("meetups/creator-panel/<int:pk>", views.creator_panel_view, name="creator-panel"),
+    path("meetups/update-meetup/<slug:slug>", views.update_meetup_view, name="update_meetup"),
+
 
 ]
 

@@ -13,6 +13,7 @@ from.models import Meetup, Location
 from .forms import UserCreationForm, MeetupForm, LocationForm, CompanyForm, ParticipantForm
 from django.contrib.auth.forms import AuthenticationForm
 
+@login_required(login_url="login")
 def home_view(request):
     meetups = Meetup.objects.all()
     count_meetups = meetups.count()
@@ -41,6 +42,7 @@ def creator_panel_view(request, pk):
     return render(request, "meetups/creator_panel.html", context)
 
 
+@login_required(login_url="login")
 def detail_view(request, slug):
     error_message=None
     try:
@@ -81,7 +83,7 @@ def detail_view(request, slug):
         }
         return render(request, "meetups/detail.html" ,context)
 
-
+@login_required(login_url="login")
 def all_meetups_view(request):
     meetups = Meetup.objects.all()
 
@@ -90,6 +92,37 @@ def all_meetups_view(request):
     }
 
     return render(request, "meetups/all_meetups.html", context)
+
+@login_required(login_url="login")
+@permission_required("meetups.change_meetup", login_url='/login', raise_exception=True)
+def update_meetup_view(request, slug):
+    user = request.user
+    meetup = Meetup.objects.get(slug=slug)
+    locations = Location.objects.all()
+
+    if meetup.organizer != user:
+        return HttpResponse("You not allowed hear!")
+    
+    if request.method == "POST":
+        form = MeetupForm(request.POST, request.FILES, instance=meetup)
+        if form.is_valid():
+            meetup = form.save(commit=False)
+            meetup.slug = slugify(meetup.title)
+            meetup.organizer = request.user
+            print(meetup.title)
+            form.save()
+            return redirect("creator-panel", pk=user.id)
+    else:
+        form = MeetupForm(instance=meetup)
+
+
+
+    context={
+        "meetup":meetup,
+        "form": form,
+        "locations": locations
+    }
+    return render(request, "meetups/update_meetup.html", context)
 
 
 def search_meetups(request):
@@ -116,7 +149,6 @@ def create_meetup_view(request):
             if form.is_valid():
                 meetup = form.save(commit=False)
                 meetup.slug = slugify(meetup.title)
-                print("opa")
                 meetup.organizer = request.user
                 meetup.save()
                 return redirect("home")
@@ -272,7 +304,8 @@ def check_username_view(request):
         return HttpResponse("<div id='username-error' class='success'>This username ia available</color=>")
 
 
-
+@login_required(login_url="login")
+@permission_required('meetups.delete_meetup', login_url='/login', raise_exception=True)
 def delete_meetup_view(request, slug):
     user = request.user.id
     meetup = Meetup.objects.get(slug=slug)
