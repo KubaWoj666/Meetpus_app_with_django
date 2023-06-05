@@ -8,7 +8,9 @@ urlpatterns = [
     path("meetups/all-meetups", views.all_meetups_view, name="all-meetups"),
     path("meetups/search", views.search_meetups, name="search"),
     path("meetups/create", views.create_meetup_view, name="create-meetup"),
+    path("meetup/read-later", views.ReadLater.as_view(), name="read-later"),
     path("meetups/create/location", views.add_new_location_view, name="create-location"),
+    
     
     path("meetups/profile/sing-up",views.sign_up_user_view, name="sign-up"),
     path("meetups/profile/default-or-creator/<int:pk>", views.default_or_creator_view, name="default_or_creator"),
@@ -25,7 +27,8 @@ urlpatterns = [
 htmx_urlpatterns = [
     path("htmx/last_loc", views.get_last_location_view, name="last_location"),
     path("htmx/check_username", views.check_username_view, name="check-username"),
-    path("htmx/delete-meetup/<slug:slug>", views.delete_meetup_view, name="delete_meetup")
+    path("htmx/delete-meetup/<slug:slug>", views.delete_meetup_view, name="delete_meetup"),
+    path("htmx/remove-meetup-from-session/<slug:slug>", views.remove_form_session, name="remove_meetup_from_session")
 ]
 
 urlpatterns += htmx_urlpatterns

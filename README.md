@@ -1,1 +1,2 @@
-# Meetpus_app_with_django
+# Meetup app with django
+

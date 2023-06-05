@@ -4,14 +4,19 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Q
 from django.http import HttpResponse
+from django.views import View
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
 from django.utils.text import slugify
 
 from django.contrib.auth.models import User, Group
+from django.contrib.sessions.models import Session
+from django.contrib.sessions.backends.db import SessionStore
+
 from.models import Meetup, Location
 from .forms import UserCreationForm, MeetupForm, LocationForm, CompanyForm, ParticipantForm
 from django.contrib.auth.forms import AuthenticationForm
+
 
 @login_required(login_url="login")
 def home_view(request):
@@ -20,11 +25,15 @@ def home_view(request):
     latest_meetups = meetups.order_by("-created")[:3]
     end_soon_meetups = meetups.order_by("date")[:3] 
 
-
+    stored_meetups = request.session.get("stored_meetups")
+    # print("home page", stored_meetups)
+    # request.session.flush()
+   
     context = {
         "latest_meetups": latest_meetups,
         "end_soon_meetups": end_soon_meetups,
         "count_meetups": count_meetups,
+        "stored_meetups":stored_meetups
     }
 
     return render(request, "meetups/home.html", context)
@@ -62,7 +71,6 @@ def detail_view(request, slug):
                 error_message = f"You have been successfully sing up for {meetup} meetup"
                 print(error_message)
                
-
             else:
                 # messages.error(request, "Ups Something something went wrong!")
                 error_message = "Ups Something something went wrong"
@@ -83,6 +91,7 @@ def detail_view(request, slug):
         }
         return render(request, "meetups/detail.html" ,context)
 
+
 @login_required(login_url="login")
 def all_meetups_view(request):
     meetups = Meetup.objects.all()
@@ -92,6 +101,7 @@ def all_meetups_view(request):
     }
 
     return render(request, "meetups/all_meetups.html", context)
+
 
 @login_required(login_url="login")
 @permission_required("meetups.change_meetup", login_url='/login', raise_exception=True)
@@ -114,8 +124,6 @@ def update_meetup_view(request, slug):
             return redirect("creator-panel", pk=user.id)
     else:
         form = MeetupForm(instance=meetup)
-
-
 
     context={
         "meetup":meetup,
@@ -174,7 +182,6 @@ def create_meetup_view(request):
     return render(request, "meetups/create_meetup.html", context)
 
 
-
 @login_required(login_url="login")
 @permission_required('meetups.add_location', login_url='/login', raise_exception=True)
 def add_new_location_view(request):
@@ -197,7 +204,6 @@ def add_new_location_view(request):
 
     return render(request, "meetups/create_location.html", context )
         
-
 
 def sign_up_user_view(request):
     form = UserCreationForm()
@@ -228,6 +234,7 @@ def default_or_creator_view(request, pk):
             return redirect("create-company", pk=pk)
         
     return render(request, "meetups/default_or_creator.html", {} )
+
 
 def create_company_view(request, pk):
     if request.method == "POST":
@@ -277,6 +284,37 @@ def logout_view(request):
     return redirect("home")
 
 
+class ReadLater(View):
+    def get(self, request):
+        stored_meetups = request.session.get("stored_meetups")
+
+        context = {}
+
+        if stored_meetups is None or len(stored_meetups)==0:
+            context["meetups"] = []
+            context["has_meetups"] = False
+        else:
+            meetups = Meetup.objects.filter(slug__in=stored_meetups)
+            context["meetups"] = meetups
+            context["has_meetups"] = True
+
+        return render(request, "meetups/read_later.html", context)
+    
+
+    def post(self, request):
+        stored_meetups = request.session.get("stored_meetups")
+        if stored_meetups is None:
+            stored_meetups = []
+        meetup_slug = request.POST["meetup_slug"]
+        
+        if meetup_slug not in stored_meetups:
+            stored_meetups.append(meetup_slug)
+        
+        request.session["stored_meetups"] = stored_meetups
+        
+        return redirect("home")
+
+
 # ==== HTMX views ====
 
 def get_last_location_view(request):
@@ -296,6 +334,7 @@ def get_last_location_view(request):
 
     #     return HttpResponse(status=200)
   
+
 def check_username_view(request):
     username = request.POST.get("username")
     if User.objects.filter(username=username).exists():
@@ -307,14 +346,52 @@ def check_username_view(request):
 @login_required(login_url="login")
 @permission_required('meetups.delete_meetup', login_url='/login', raise_exception=True)
 def delete_meetup_view(request, slug):
-    user = request.user.id
     meetup = Meetup.objects.get(slug=slug)
+    stored_meetups = request.session.get("stored_meetups")
+
+    if stored_meetups and slug in stored_meetups:
+        stored_meetups.remove(slug)
+        request.session["stored_meetups"] = stored_meetups
+
     meetup.delete()
 
-    meetups = Meetup.objects.filter(organizer=user)
+    # Delete meetup from all sessions 
+    for session in Session.objects.all():
+        session_data = session.get_decoded()
+        print(session_data)
+        if "stored_meetups" in session_data and slug in session_data["stored_meetups"]:
+            session_data["stored_meetups"].remove(slug)
+            session.session_data = SessionStore().encode(session_data)
+            session.save()
+
+    meetups = Meetup.objects.filter(organizer=request.user.id)
 
     context = {
-        "meetups":meetups,
-        }
-    return render(request, "meetups/includes/meetup-list.html", context )
+        "meetups": meetups,
+    }
+    return render(request, "meetups/includes/meetup-list.html", context)
+
+    
+def remove_form_session(request, slug):
+    
+    stored_meetups = request.session.get("stored_meetups")
+    print(stored_meetups)
+
+    meetup = Meetup.objects.get(slug=slug)
+    print(meetup)
+
+    if meetup.slug in stored_meetups:
+        stored_meetups.remove(meetup.slug)
+    
+    request.session["stored_meetups"] = stored_meetups
+
+    meetups = Meetup.objects.filter(slug__in=stored_meetups)
+    
+    context = {
+        "meetups": meetups
+
+    }
+
+    return render(request, "meetups/includes/read_later_meetups_list.html", context)
+
     

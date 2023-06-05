@@ -1,0 +1,33 @@
+{% extends '_base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Read later 
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'meetups/style/read_later.css' %}">
+    
+{% endblock css %}
+    
+    
+
+
+{% block content %}
+<section id="stored-posts">   
+    {% if not has_meetups %}
+        <p>You didn't save any meetups for later</p>   
+    {% endif %}  
+    <ul id="read_later">
+        {% include 'meetups/includes/read_later_meetups_list.html' %}
+    </ul>
+</section>
+
+
+
+    
+{% endblock content %}
+  
+    

@@ -1,0 +1,11 @@
+
+{% for meetup in meetups %}
+    <li class="list-group-item d-flex justyfi-content-between align-item-center"><a class="me-2" href="{}">{{ meetup.title }}</a>
+        <button class="badge rounded-pill text-bg-danger mt-2" style="cursor: pointer"
+                value="{{meetup.slug}}"
+                hx-delete="{% url 'remove_meetup_from_session' meetup.slug %}"
+                hx-confirm="Are you sure you want to remove this meetup"
+                hx-target="#read_later">X
+        </button>
+    </li>
+{% endfor %}
