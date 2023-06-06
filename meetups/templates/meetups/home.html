@@ -38,9 +38,8 @@
                     <form action="{% url 'read-later' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="meetup_slug" value="{{meetup.slug}}">
-                        <button>Read Later</button>
+                        <button class="btn mt-2 me-2">Read Later</button>
                     </form>
-                    <a href="{{ meetup.get_absolute_url }}" class="btn mt-2 me-2">Read Later</a>
                         
                     {% endif %}
                         

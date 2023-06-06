@@ -10,6 +10,7 @@ urlpatterns = [
     path("meetups/create", views.create_meetup_view, name="create-meetup"),
     path("meetup/read-later", views.ReadLater.as_view(), name="read-later"),
     path("meetups/create/location", views.add_new_location_view, name="create-location"),
+    path("meetups/my-meetups/<int:pk>", views.user_sign_up_meetups_view, name="my_meetups"),
     
     
     path("meetups/profile/sing-up",views.sign_up_user_view, name="sign-up"),

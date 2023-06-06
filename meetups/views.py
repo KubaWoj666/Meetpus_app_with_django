@@ -41,8 +41,8 @@ def home_view(request):
 @login_required(login_url="login")
 @permission_required("meetups.add_meetup", login_url='/login', raise_exception=True)
 def creator_panel_view(request, pk):
-    user = User.objects.get(id=pk)
-    meetups = Meetup.objects.filter(organizer=user)
+   
+    meetups = Meetup.objects.filter(organizer=pk)
 
     context = {
         "meetups":meetups,
@@ -132,7 +132,7 @@ def update_meetup_view(request, slug):
     }
     return render(request, "meetups/update_meetup.html", context)
 
-
+@login_required(login_url="login")
 def search_meetups(request):
     q = request.GET.get("q") if request.GET.get("q") !=None else ""
 
@@ -282,6 +282,32 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect("home")
+
+@login_required(login_url="login")
+def user_sign_up_meetups_view(request, pk):
+    try:
+        meetups = Meetup.objects.filter(participants=pk)
+
+        if request.method == "POST":
+            user_id = request.user.id
+            meetup_id = request.POST.get("meetup_id")
+            print(meetup_id)
+            meetup = meetups.get(id=meetup_id)
+            meetup.participants.remove(user_id)
+
+            context={
+                "meetups":meetups
+            }
+            return render(request, "meetups/user_sign_up_meetups.html", context)
+
+        else:        
+            context = {
+                "meetups":meetups
+            }
+
+            return render(request, "meetups/user_sign_up_meetups.html", context)
+    except:
+        return redirect("home")
 
 
 class ReadLater(View):

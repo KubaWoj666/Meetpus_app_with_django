@@ -2,17 +2,14 @@
 {% load static %}
 
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'meetups/style/read_later.css' %}">
+{% endblock css %}
+    
+
 {% block title %}
     Read later 
 {% endblock title %}
-
-
-{% block css %}
-<link rel="stylesheet" href="{% static 'meetups/style/read_later.css' %}">
-    
-{% endblock css %}
-    
-    
 
 
 {% block content %}

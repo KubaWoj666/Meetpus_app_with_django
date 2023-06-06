@@ -1,0 +1,40 @@
+{% extends '_base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'meetups/style/read_later.css' %}">
+
+{% endblock css %}
+
+
+{% block title %}
+    My Meetups
+{% endblock title %}
+    
+    
+
+{% block content %}
+    
+    <section id="stored-posts">   
+            
+        <p>You sign up for this meetups</p>
+        {% for meetup in meetups %}
+        <li class="list-group-item d-flex justyfi-content-between align-item-center">
+            <a class="me-2" href="{{meetup.get_absolute_url }}">{{ meetup.title }}</a>
+            <form action="" method="post" >
+                {% csrf_token %}
+                <input type="hidden" name="meetup_id" value="{{meetup.id}}">
+                <button class="badge rounded-pill text-bg-danger mt-2" style="cursor: pointer"
+                        ><i class="fa-solid fa-trash"></i>
+                </button>
+            </form>
+        </li>
+        {% endfor %}
+    </section>
+
+        
+
+{% endblock content %}
+    
