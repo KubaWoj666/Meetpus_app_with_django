@@ -9,6 +9,7 @@ Creators also have their own panel where they can check how many people have sig
 All users can browse upcoming meetups and view them in a separate template. The app utilizes Django Sessions to store your interactions. Additionally, you can view and manage meetups you have signed up for, as well as sign out if needed.
 
 ## Sneak peek
+I
 
 
 # To do
@@ -23,3 +24,6 @@ All users can browse upcoming meetups and view them in a separate template. The 
 - htmx
 - Html
 - Java Script
+- Bootstrap
+- Django widget tweaks
+- Css
