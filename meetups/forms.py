@@ -1,5 +1,4 @@
 from django import forms
-
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
@@ -15,6 +14,8 @@ class MeetupForm(forms.ModelForm):
             
         }
 
+
+
 class LocationForm(forms.ModelForm):
     class Meta:
         model = Location
@@ -28,10 +29,13 @@ class UserCreationForm(UserCreationForm):
         fields = ['username','email']
 
 
+
 class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
         exclude = ["creator"]
+
+
 
 class ParticipantForm(forms.ModelForm):
     class Meta:

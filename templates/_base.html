@@ -44,7 +44,7 @@
               <li class="nav-item nav-underline">
                 <a class="nav-link" href="{% url 'my_meetups' request.user.id %}">My meetups</a>
               </li>
-              {% if perms.meetups.add_meetup %}
+              {% if perms.meetups.can_add_meetup %}
                 <li class="nav-item nav-underline">
                   <a class="nav-link" href="{% url 'create-meetup' %}"  >Create Meetup</a>
                 </li>

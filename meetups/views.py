@@ -39,7 +39,7 @@ def home_view(request):
     return render(request, "meetups/home.html", context)
 
 @login_required(login_url="login")
-@permission_required("meetups.add_meetup", login_url='/login', raise_exception=True)
+@permission_required("meetups.can_add_meetup", login_url='/login', raise_exception=True)
 def creator_panel_view(request, pk):
    
     meetups = Meetup.objects.filter(organizer=pk)
@@ -104,7 +104,7 @@ def all_meetups_view(request):
 
 
 @login_required(login_url="login")
-@permission_required("meetups.change_meetup", login_url='/login', raise_exception=True)
+@permission_required("meetups.can_update_meetup", login_url='/login', raise_exception=True)
 def update_meetup_view(request, slug):
     user = request.user
     meetup = Meetup.objects.get(slug=slug)
@@ -147,7 +147,7 @@ def search_meetups(request):
 
 
 @login_required(login_url="login")
-@permission_required("meetups.add_meetup", login_url='/login', raise_exception=True)
+@permission_required("meetups.can_add_meetup", login_url='/login', raise_exception=True)
 def create_meetup_view(request):
     locations = Location.objects.all()
     error_message = None
@@ -183,7 +183,7 @@ def create_meetup_view(request):
 
 
 @login_required(login_url="login")
-@permission_required('meetups.add_location', login_url='/login', raise_exception=True)
+@permission_required('meetups.can_add_meetup', login_url='/login', raise_exception=True)
 def add_new_location_view(request):
     print(request.method)
     if request.method == "POST":
@@ -370,7 +370,7 @@ def check_username_view(request):
 
 
 @login_required(login_url="login")
-@permission_required('meetups.delete_meetup', login_url='/login', raise_exception=True)
+@permission_required('meetups.can_delete_meetup', login_url='/login', raise_exception=True)
 def delete_meetup_view(request, slug):
     meetup = Meetup.objects.get(slug=slug)
     stored_meetups = request.session.get("stored_meetups")

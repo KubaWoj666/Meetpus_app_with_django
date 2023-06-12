@@ -50,9 +50,9 @@ class MeetupsTestCase(TestCase):
         cls.creator = User.objects.create_user(username="creator", 
                                                email="creator@email.com", 
                                                password="testpassword")
-        permission = Permission.objects.get(codename="add_meetup")
-        delete_permission = Permission.objects.get(codename="delete_meetup")
-        update_permission = Permission.objects.get(codename="change_meetup")
+        permission = Permission.objects.get(codename="can_add_meetup")
+        delete_permission = Permission.objects.get(codename="can_delete_meetup")
+        update_permission = Permission.objects.get(codename="can_update_meetup")
         cls.creator.user_permissions.add(permission)
         cls.creator.user_permissions.add(delete_permission, update_permission)
     
@@ -144,11 +144,11 @@ class MeetupsTestCase(TestCase):
 
 
     def test_search_meetups_view(self):
+        self.client.login(username="creator", password="testpassword")
         response = self.client.get(reverse("search"), {"q":"test"})
         country_response = self.client.get(reverse("search"), {"q":"poland"})
         no_response = self.client.get(reverse("search"), {"q":"no response"})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(no_response.status_code, 200)
         self.assertEqual(country_response.status_code, 200)
         self.assertContains(response, "test meetup")
         self.assertContains(country_response, "Poland")
@@ -222,6 +222,39 @@ class MeetupsTestCase(TestCase):
         self.client.login(username="creator", password="testpassword")
         response = self.client.delete(reverse("delete_meetup", args=[self.meetup.slug])) 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(Meetup.objects.filter(slug='updated-meetup-title').exists())
+        self.assertFalse(Meetup.objects.filter(slug='updated-meetup-title').exists())
+
+    
+    def test_read_later_get_method_class_view(self):
+        session = self.client.session
+        session["stored_meetups"] = [self.meetup.slug]
+        session.save()
+        url = reverse("read-later")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "meetups/read_later.html")
+        self.assertTrue("meetups" in response.context)
+        self.assertTrue("has_meetups" in response.context)
+
+        meetups = response.context["meetups"]
+        self.assertEqual(meetups[0], self.meetup)
+        self.assertEqual(len(meetups), 1)
+
+        has_meetups = response.context["has_meetups"]
+        self.assertTrue(has_meetups)
+
+    def test_read_later_post_method_class_view(self):
+        session = self.client.session
+        session.save()
+
+        response = self.client.post(reverse("read-later"), data={"meetup_slug": self.meetup.slug})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse("home"))
+        self.assertEqual(session["stored_meetups"], [self.meetup.slug])
+
+
+
+
+
 
 

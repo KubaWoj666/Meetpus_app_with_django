@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'meetups',
+    'meetups.apps.MeetupsConfig',
 
       # 3rd Party
     'crispy_forms',  # new
