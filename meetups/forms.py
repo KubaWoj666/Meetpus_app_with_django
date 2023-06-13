@@ -34,6 +34,9 @@ class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
         exclude = ["creator"]
+        labels = {
+            "name" : "Company Name"
+        }
 
 
 

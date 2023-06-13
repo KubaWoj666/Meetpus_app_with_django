@@ -13,8 +13,45 @@
 {% endblock css %}
     
 {% block content %}
-<h1>Create Your Company</h1>
-    <form class="form" method="post"  >
+<div class="container d-flex justify-content-center align-items-center" >
+    <h1>Create Your Company</h1>
+</div>
+<div class="container d-flex justify-content-around ">
+    <div class="card" style="width: 30rem;">
+        <img src="{% static 'meetups/images/company.jpg' %}" class="card-img-top" alt="...">
+        <div class="card-body">
+          
+          <form class="form" method="post"  >
+            {% csrf_token %}
+            <div class="forms-control {% if field.errors %} errors {% endif %} ">
+                <label>{{ form.name.label_tag }}</label>
+                {{ form.name.errors }}
+                {% render_field form.name class="form-control"  name="name" id="id_name"%}
+            </div>
+            
+            <div  class="forms-control {% if field.errors %} errors {% endif %} ">
+                <label>{{ form.country.label_tag }}</label>
+                {{ form.country.errors }}
+                {% render_field form.country class="form-control"  name="country" id="id_country"%}
+            </div>
+            
+            <div  class="forms-control {% if field.errors %} errors {% endif %} ">
+                <label>{{ form.city.label_tag }}</label>
+                {{ form.city.errors }}
+                {% render_field form.city class="form-control"  name="city" id="id_city"%}
+            </div>
+            
+            <div  class="forms-control {% if field.errors %} errors {% endif %} ">
+                <label>{{ form.street.label_tag }}</label>
+                {{ form.street.errors }}
+                {% render_field form.street class="form-control"  name="street" id="id_street"%}
+            </div>
+    
+            <button id="meetup_button" class="button-form" type="submit">Continue</button>
+        </form>
+        </div>
+      </div>
+    <!-- <form class="form" method="post"  >
         {% csrf_token %}
         <div class="forms-control {% if field.errors %} errors {% endif %} ">
             <label>{{ form.name.label_tag }}</label>
@@ -41,6 +78,9 @@
         </div>
 
         <button id="meetup_button" class="button-form" type="submit">Continue</button>
-    </form>
+    </form> -->
 
     {% endblock content %}
+
+
+    

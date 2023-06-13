@@ -1,15 +1,36 @@
-{% for meetup in meetups  %}
+<!-- {% for meetup in meetups  %}
         
 <div class=" card col-sm-6 mb-3 mb-sm-0" style="width: 18rem;">
     <img  src="{{meetup.image.url}}" class="card-img-top"  alt="{{meetup.title}}">
     <div class="card-body">
-    <h5 class="card-title">{{meetup.title}}</h5>
-    <p class="card-text">{{meetup.description}}</p>
-    <p class="card-text">{{meetup.organizer_email}}</p>
-    <p class="card-text">{{meetup.location}}</p>
-    <p class="card-text">participants: {{meetup.participants.count}}</p>
-    <a href="{% url 'update_meetup' meetup.slug %}" class="btn btn-success" type="submit">Update</a>
-    <button hx-delete="{% url 'delete_meetup' meetup.slug %}" hx-target="#meetups-list" hx-confirm="Are you sure you wish to delete" class="btn btn-danger" type="submit">Delete</button>
+        <h5 class="card-title">{{meetup.title}}</h5>
+        <p class="card-text">{{meetup.description}}</p>
+        <p class="card-text">{{meetup.organizer_email}}</p>
+        <p class="card-text">{{meetup.location}}</p>
+        <p class="card-text">participants: {{meetup.participants.count}}</p>
+        <a href="{% url 'update_meetup' meetup.slug %}" class="btn btn-success" type="submit">Update</a>
+        <button hx-delete="{% url 'delete_meetup' meetup.slug %}" hx-target="#meetups-list" hx-confirm="Are you sure you wish to delete" class="btn btn-danger" type="submit">Delete</button>
     </div>
 </div>
+{% endfor %} -->
+
+
+{% for meetup in meetups  %}    
+
+    <div class="col-sm-6 mb-3 mb-sm-0 mt-5" style="width: 18rem;">
+        <img  src="{{meetup.image.url}}" class="card-img-top"  alt="{{meetup.title}}">
+
+      <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{meetup.title}}</h5>
+            <p class="card-text">{{meetup.description|slice:":25"}} ...</p>
+            <p class="card-text">{{meetup.organizer_email}}</p>
+            <p class="card-text">{{meetup.location}}</p>
+            <p class="card-text">participants: {{meetup.participants.count}}</p>
+            <a href="{% url 'update_meetup' meetup.slug %}" class="btn btn-success" type="submit">Update</a>
+            <button hx-delete="{% url 'delete_meetup' meetup.slug %}" hx-target="#meetups-list" hx-confirm="Are you sure you wish to delete" class="btn btn-danger" type="submit">Delete</button>
+        </div>
+      </div>
+    </div>
+    
 {% endfor %}

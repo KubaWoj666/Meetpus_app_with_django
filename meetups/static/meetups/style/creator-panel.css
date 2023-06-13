@@ -1,5 +1,10 @@
 .heder{
-    color: white;
+    color: rgb(113, 108, 108);
+    margin-top: 3px;
+}
+
+.wrapper{
+    background-color: rgb(228, 227, 227);
 }
 
 img{

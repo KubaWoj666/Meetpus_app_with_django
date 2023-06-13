@@ -43,7 +43,7 @@ def home_view(request):
 def creator_panel_view(request, pk):
    
     meetups = Meetup.objects.filter(organizer=pk)
-
+    
     context = {
         "meetups":meetups,
         }

@@ -1,5 +1,5 @@
 section {
-    background-color: #a668ec;
+    background-color: rgb(228, 227, 227);
     display: flex;
     margin: 3rem auto;
     
@@ -17,17 +17,16 @@ section {
     max-width: 20rem;
     
     margin: 1rem 0;
-    background-color: #350490;
+    background-color: rgb(85, 155, 137);
     padding: 2rem;
     color: white;
     border-radius: 4px;
   }
   
-  .meetup-summary {
-    /* display: flex; */
+  /* /* .meetup-summary {
     align-items: flex-start;
-  }
-  
+  } */
+   */
   .meetup-image {
     margin-right: 2rem;
   }
@@ -56,18 +55,27 @@ section {
   }
   
   .meetup-actions .btn {
-    background-color: #cb82fb;
-    border-color: #cb82fb;
-    color: #350490;
+    background-color: #30b85d;
+    border-color: #1ca874ef;
+    color: #0e1b19;
     padding: 0.75rem 2rem;
   }
   
   .meetup-actions .btn:hover {
-    background-color: #ba82fb;
-    border-color: #ba82fb;
+    background-color: #176f2d;
+    border-color: #07020e;
   }
 
   .header{
     margin-left: 20px;
-    color: white;
+    color: rgb(113, 108, 108);
+  }
+
+  .list_wrapper{
+    border: solid black;
+  }
+
+  .header_div{
+    border: solid black;
+
   }
