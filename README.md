@@ -9,7 +9,9 @@ Creators also have their own panel where they can check how many people have sig
 All users can browse upcoming meetups and view them in a separate template. The app utilizes Django Sessions to store your interactions. Additionally, you can view and manage meetups you have signed up for, as well as sign out if needed.
 
 ## Sneak peek
-I
+  #home page
+<img width="1432" alt="Zrzut ekranu 2023-06-13 o 12 38 48" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/1a13d686-763d-49af-a9b3-35d8a2c80960">
+
 
 
 # To do
