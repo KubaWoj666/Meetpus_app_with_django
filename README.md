@@ -9,8 +9,18 @@ Creators also have their own panel where they can check how many people have sig
 All users can browse upcoming meetups and view them in a separate template. The app utilizes Django Sessions to store your interactions. Additionally, you can view and manage meetups you have signed up for, as well as sign out if needed.
 
 ## Sneak peek
-I
+  #home page
+<img width="1432" alt="Zrzut ekranu 2023-06-13 o 12 38 48" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/1a13d686-763d-49af-a9b3-35d8a2c80960">
+<img width="1437" alt="Zrzut ekranu 2023-06-13 o 12 38 59" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/97bfa5ff-4cce-477a-b9ad-3b968a1cac04">
 
+  #detail page
+<img width="1427" alt="Zrzut ekranu 2023-06-13 o 12 47 07" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/17125271-0811-42e2-9299-38d329818d54">
+
+  #creator panel
+<img width="1437" alt="Zrzut ekranu 2023-06-13 o 12 42 19" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/20d06e1d-c283-49b7-a6a8-c1f021f90d8d">
+
+  #read later page
+<img width="1432" alt="Zrzut ekranu 2023-06-13 o 12 43 40" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/61b2f810-688f-4d37-a35c-ffe9eb2681ee">
 
 # To do
 - Add more futures (likes, views)
