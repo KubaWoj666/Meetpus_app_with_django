@@ -17,11 +17,9 @@
 <section class="container d-flex justify-content-center align-items-center" >
     <div>
         <div class="container d-flex justify-content-center align-items-center">
-         <h2 class="header">Latest meetups</h2>
+            <h2 class="header">Latest meetups</h2>
         </div>
-        
-    
-        <ol>
+        <ol class="container d-flex justify-content-around">
             {% for meetup in latest_meetups %}
             <li class="meetup-item me-2">
                 <article>
@@ -34,7 +32,7 @@
                             <address>{{meetup.location.country}}</address>
                         </div>
                     </div>
-                    <div class="meetup-actions">
+                    <div class="meetup-actions ">
                         <a href="{{ meetup.get_absolute_url }}" class="btn">More Details</a>
                         
                         {% if meetup.slug in stored_meetups %}
