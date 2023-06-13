@@ -384,7 +384,6 @@ def delete_meetup_view(request, slug):
     # Delete meetup from all sessions 
     for session in Session.objects.all():
         session_data = session.get_decoded()
-        print(session_data)
         if "stored_meetups" in session_data and slug in session_data["stored_meetups"]:
             session_data["stored_meetups"].remove(slug)
             session.session_data = SessionStore().encode(session_data)
@@ -401,11 +400,9 @@ def delete_meetup_view(request, slug):
 def remove_form_session(request, slug):
     
     stored_meetups = request.session.get("stored_meetups")
-    print(stored_meetups)
-
+    
     meetup = Meetup.objects.get(slug=slug)
-    print(meetup)
-
+    
     if meetup.slug in stored_meetups:
         stored_meetups.remove(meetup.slug)
     

@@ -243,16 +243,38 @@ class MeetupsTestCase(TestCase):
         has_meetups = response.context["has_meetups"]
         self.assertTrue(has_meetups)
 
+
     def test_read_later_post_method_class_view(self):
+        self.client.login(username="creator", password="testpassword")
+
         session = self.client.session
+        session["stored_meetups"] = []
         session.save()
 
         response = self.client.post(reverse("read-later"), data={"meetup_slug": self.meetup.slug})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse("home"))
+        update_session = self.client.session
+        self.assertEqual(update_session["stored_meetups"], [self.meetup.slug])
+
+
+    def test_remove_from_session_view(self):
+        self.client.login(username="creator", password="testpassword")
+
+        session = self.client.session
+        session["stored_meetups"] = [self.meetup.slug]
+        session.save()
+
         self.assertEqual(session["stored_meetups"], [self.meetup.slug])
 
+        response = self.client.post(reverse("remove_meetup_from_session", args=[self.meetup.slug]))
+        update_session = self.client.session
 
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(update_session["stored_meetups"], [])
+        self.assertTemplateUsed(response, "meetups/includes/read_later_meetups_list.html" )
+
+        
 
 
 
