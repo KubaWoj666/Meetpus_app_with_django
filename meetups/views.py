@@ -17,6 +17,8 @@ from.models import Meetup, Location
 from .forms import UserCreationForm, MeetupForm, LocationForm, CompanyForm, ParticipantForm
 from django.contrib.auth.forms import AuthenticationForm
 
+from .utils import count_views_by_meetup
+
 
 @login_required(login_url="login")
 def home_view(request):
@@ -26,14 +28,14 @@ def home_view(request):
     end_soon_meetups = meetups.order_by("date")[:3] 
 
     stored_meetups = request.session.get("stored_meetups")
-    # print("home page", stored_meetups)
     # request.session.flush()
-   
+    
     context = {
         "latest_meetups": latest_meetups,
         "end_soon_meetups": end_soon_meetups,
         "count_meetups": count_meetups,
-        "stored_meetups":stored_meetups
+        "stored_meetups":stored_meetups,
+        
     }
 
     return render(request, "meetups/home.html", context)
@@ -44,8 +46,12 @@ def creator_panel_view(request, pk):
    
     meetups = Meetup.objects.filter(organizer=pk)
     
+    views_by_meetup = count_views_by_meetup(meetups)
+
     context = {
-        "meetups":meetups,
+        "meetups": meetups,
+        "views_by_meetup": views_by_meetup
+
         }
 
     return render(request, "meetups/creator_panel.html", context)
@@ -54,32 +60,32 @@ def creator_panel_view(request, pk):
 @login_required(login_url="login")
 def detail_view(request, slug):
     error_message=None
+    
     try:
         meetup = Meetup.objects.get(slug=slug)
         if request.method == "GET":
             form = ParticipantForm(initial={'email': request.user.email})
-            print(request.method)
-
+            views = request.session.get(meetup.slug, 0)
+            if request.user != meetup.organizer:
+                request.session[meetup.slug] = views + 1
+                
         else:
             form = ParticipantForm(request.POST, initial={'email': request.user.email})
             if form.is_valid():
                 email = form.cleaned_data["email"]
                 participant = User.objects.get(email=email)
                 meetup.participants.add(participant)
-                # messages.success(request, f"You have been successfully sing up for {meetup} meetup.")
-                # print(messages)
                 error_message = f"You have been successfully sing up for {meetup} meetup"
-                print(error_message)
-               
+                
             else:
-                # messages.error(request, "Ups Something something went wrong!")
                 error_message = "Ups Something something went wrong"
             
         context = {
             "meetup":meetup,
             "meetup_exist":True,
             "form":form,
-            "error_message":error_message
+            "error_message":error_message,
+            "views" : views
             
         }
         return render(request, "meetups/detail.html" ,context)
