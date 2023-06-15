@@ -17,10 +17,11 @@
     
         <article>
             <img  id="main-image"  src="{{ meetup.image.url }}" alt="{{ meetup.title }}">
-
             <section id="location">
                 <h2>Meetup Location</h2>
                 <address>This Meetup take place in <span>{{meetup.location.city}} ({{meetup.location.country}}) {{meetup.location.street}}</span> street</address>
+                <h3>Meetup Date</h3>
+                <span>{{meetup.date|date:"d(D)-m-Y"}}</span>
             </section>
 
             <section id="details">
@@ -29,10 +30,7 @@
                 <footer>Need more details? Please <a href="mailto:{{meetup.organizer_email}}">contact the organizer</a>.</footer>
             </section>
             <button class="btn btn-primary mt-3" type="submit">Maybe</button>
-            
-            
         </article>
-        
 
         <form   class="form"  method="post"  >
             {% csrf_token %}
@@ -45,8 +43,6 @@
             {% endfor %}
             <button id="meetup_button" class="button-form mt-2" type="submit">Sign Me Up</button>
         </form>
-
-        
 
     {% else %}
     <h2>no meetup</h2>

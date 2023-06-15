@@ -31,6 +31,7 @@
                         <div class="meetup-details">
                             <h3>{{meetup.title}}</h3>
                             <address>{{meetup.location.country}}</address>
+                            <span>Date: {{meetup.date|date:"d(D)-m-Y"}}</span>
                         </div>
                     </div>
                     <div class="meetup-actions ">
@@ -69,6 +70,7 @@
                         <div class="meetup-details">
                             <h3>{{meetup.title}}</h3>
                             <address>{{meetup.location.country}}</address>
+                            <span>{{meetup.date|date:"d(D)-m-Y"}}</span>
                         </div>
                     </div>
                     <div class="meetup-actions">

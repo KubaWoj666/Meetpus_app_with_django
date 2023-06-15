@@ -1,4 +1,3 @@
-
 {% extends '_base.html' %}
 {% load widget_tweaks %}
 {% load static %}
@@ -13,19 +12,13 @@
 {% endblock css %}
     
 {% block content %}
-
-
-
     <!-- Modal -->
-    
     <div id="modal" class="modal fade">
         <div id="dialog" class="modal-dialog" hx-target="this">
 
         </div>
     </div>
   
-
-
     <form class="form" action="{% url 'create-meetup' %}" method="post" enctype="multipart/form-data" >
         {% csrf_token %}
         <div class="forms-control {% if field.errors %} errors {% endif %} ">

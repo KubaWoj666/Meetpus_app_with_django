@@ -1,5 +1,4 @@
 {% extends '_base.html' %}
-
 {% load static %}
 
 
@@ -8,12 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css" />
 {% endblock css %}
 
+
 {% block title %}
     Login
 {% endblock title %}
 
-{% block content %}
-    
+
+{% block content %}    
 <form   class="form"  method="post"  >
     {% csrf_token %}
     {% for field in form %}
@@ -25,6 +25,5 @@
     {% endfor %}
     <button id="meetup_button" class="button-form" type="submit">login</button>
     <p>you don't have account? <a href="{% url 'sign-up'%} "> Sign Up</a> </p>
-</form>
-    
+</form>    
 {% endblock content %}

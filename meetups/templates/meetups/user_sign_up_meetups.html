@@ -13,12 +13,9 @@
     My Meetups
 {% endblock title %}
     
-    
 
 {% block content %}
-    
-    <section id="stored-posts">   
-            
+    <section id="stored-posts">           
         <p>You sign up for this meetups</p>
         {% for meetup in meetups %}
         <li class="list-group-item d-flex justyfi-content-between align-item-center">
@@ -33,8 +30,5 @@
         </li>
         {% endfor %}
     </section>
-
-        
-
 {% endblock content %}
     

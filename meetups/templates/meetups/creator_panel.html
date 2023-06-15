@@ -2,27 +2,23 @@
 {% load static %}
 
 
-
 {% block css %}
     <link rel="stylesheet" href="{% static 'meetups/style/creator-panel.css' %}">
 {% endblock css %}
     
-
 
 {% block content %}
 <div class="container px-4 text-center">
     <h2 class="heder">Welcome in Creator panel <br><span>{{request.user.username}}</span> </h2>
 </div>
 
-{% if meetups.exists %}
-       
+{% if meetups.exists %}    
     <div class="wrapper">
     
         <div  id="meetups-list"  class="row  d-flex justify-content-around">
             {% include 'meetups/includes/meetup-list.html' %}
         </div>
     </div>
-
 {% else %}
     <div class="container px-4 text-center mt-5">
         <a class="btn btn-primary" href="{% url 'create-meetup' %}">Create Meetup</a>
