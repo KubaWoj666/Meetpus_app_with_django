@@ -10,14 +10,14 @@ All users can browse upcoming meetups and view them in a separate template. The 
 
 ## Sneak peek
   #home page
-<img width="1432" alt="Zrzut ekranu 2023-06-13 o 12 38 48" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/1a13d686-763d-49af-a9b3-35d8a2c80960">
-<img width="1437" alt="Zrzut ekranu 2023-06-13 o 12 38 59" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/97bfa5ff-4cce-477a-b9ad-3b968a1cac04">
+<img width="1427" alt="Zrzut ekranu 2023-06-16 o 11 26 30" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/5997aa74-0099-4737-801d-88d81343fc9c">
+<img width="1412" alt="Zrzut ekranu 2023-06-16 o 11 30 15" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/c3f43404-afdb-44bc-a53d-c690cc1f76d7">
 
   #detail page
-<img width="1427" alt="Zrzut ekranu 2023-06-13 o 12 47 07" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/17125271-0811-42e2-9299-38d329818d54">
+<img width="1414" alt="Zrzut ekranu 2023-06-16 o 11 30 50" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/b1b4e1d2-6375-4462-ad5c-0f7e6c081ccc">
 
   #creator panel
-<img width="1437" alt="Zrzut ekranu 2023-06-13 o 12 42 19" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/20d06e1d-c283-49b7-a6a8-c1f021f90d8d">
+<img width="1435" alt="Zrzut ekranu 2023-06-16 o 11 31 19" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/ef6b0f46-0de9-4134-964b-4cd4d507b30e">
 
   #read later page
 <img width="1432" alt="Zrzut ekranu 2023-06-13 o 12 43 40" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/61b2f810-688f-4d37-a35c-ffe9eb2681ee">
