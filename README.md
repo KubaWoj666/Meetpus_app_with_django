@@ -1,6 +1,6 @@
 # Meetup app with django
 
-I want to create a meetups app where you can sign up as a "creator" or "participant".
+I created a meetups app where you can sign up as a "creator" or "participant".
 
 Creators have permissions to create, update, and delete meetups, locations, and companies.
 

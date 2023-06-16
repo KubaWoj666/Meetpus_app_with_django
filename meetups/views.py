@@ -5,14 +5,11 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Q
 from django.http import HttpResponse
 from django.views import View
-
 from django.shortcuts import render, redirect
 from django.utils.text import slugify
-
 from django.contrib.auth.models import User, Group
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
-
 from.models import Meetup, Location
 from .forms import UserCreationForm, MeetupForm, LocationForm, CompanyForm, ParticipantForm
 from django.contrib.auth.forms import AuthenticationForm
@@ -137,6 +134,7 @@ def update_meetup_view(request, slug):
         "locations": locations
     }
     return render(request, "meetups/update_meetup.html", context)
+
 
 @login_required(login_url="login")
 def search_meetups(request):
@@ -288,6 +286,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect("home")
+
 
 @login_required(login_url="login")
 def user_sign_up_meetups_view(request, pk):

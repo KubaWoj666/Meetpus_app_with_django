@@ -12,38 +12,6 @@ import datetime
 from .views import home_view, detail_view
 from .models import Meetup, Location
 
-# class HomePageTest(TestCase):
-#     def setUp(self) -> None:
-#         url = reverse("home")
-#         self.response = self.client.get(url)
-    
-#     @classmethod
-#     def setUpTestData(cls):
-#         cls.creator = User.objects.create_user(username="creator", 
-#                                                email="creator@email.com", 
-#                                                password="testpassword")
-#         permission = Permission.objects.get(codename="add_meetup")
-#         delete_permission = Permission.objects.get(codename="delete_meetup")
-#         cls.creator.user_permissions.add(permission)
-#         cls.creator.user_permissions.add(delete_permission)
-    
-
-#     # def test_url_exists_at_correct_location(self):
-#     #     self.assertEqual(self.response.status_code, 200)
-
-#     def test_homepage_templates(self):
-#         self.client.login(username="creator", password="testpassword")
-#         self.assertTemplateUsed(self.response, "meetups/home.html")
-        
-#     def test_templates_contain_correct_html(self):
-#         self.assertContains(self.response, "Latest meetups")
-
-#     def test_homepage_resolve_home_page_view(self):
-#         view = resolve("/")
-#         self.assertEqual(view.func.__name__, home_view.__name__)
-    
-
-
 class MeetupsTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):

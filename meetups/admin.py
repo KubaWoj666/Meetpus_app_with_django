@@ -1,8 +1,9 @@
 from django.contrib import admin
 from .models import Meetup, Location, Company
-
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User,Group
+from django.contrib.auth.models import User
+
+
 
 class CustomUserAdmin(UserAdmin):
     list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'group_name')
@@ -24,12 +25,14 @@ class AdminMeetup(admin.ModelAdmin):
         return ", ".join([str(participant) for participant in obj.participants.all()])
     get_participants.short_description = 'Participants'
 
-
 admin.site.register(Meetup, AdminMeetup)
 admin.site.register(Location)
 
+
+
 class AdminCompany(admin.ModelAdmin):
     list_display = ["creator", "name"]
+    
 admin.site.register(Company, AdminCompany)
 
 
