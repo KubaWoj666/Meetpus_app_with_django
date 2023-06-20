@@ -38,12 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'meetups.apps.MeetupsConfig',
-      # 3rd Party
-    'crispy_forms',  # new
-    'crispy_bootstrap5',
-    'widget_tweaks',  # new
 
-    "django_htmx",
+      # 3rd Party
+    'crispy_forms', 
+    'crispy_bootstrap5',
+    'widget_tweaks', 
+    'django_htmx',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    "django_htmx.middleware.HtmxMiddleware"
+    "django_htmx.middleware.HtmxMiddleware",
 ]
 
 ROOT_URLCONF = 'django_project.urls'

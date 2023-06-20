@@ -26,7 +26,8 @@ htmx_urlpatterns = [
     path("htmx/last_loc", views.get_last_location_view, name="last_location"),
     path("htmx/check_username", views.check_username_view, name="check-username"),
     path("htmx/delete-meetup/<slug:slug>", views.delete_meetup_view, name="delete_meetup"),
-    path("htmx/remove-meetup-from-session/<slug:slug>", views.remove_form_session, name="remove_meetup_from_session")
+    path("htmx/remove-meetup-from-session/<slug:slug>", views.remove_form_session, name="remove_meetup_from_session"),
+    # path("htmx/like-meetup/<slug:slug>", views.like_meetup_view, name="like")
 ]
 
 urlpatterns += htmx_urlpatterns

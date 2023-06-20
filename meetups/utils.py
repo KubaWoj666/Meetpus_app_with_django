@@ -8,11 +8,14 @@ def count_views_by_meetup(meetups):
     
         for session in Session.objects.all():
             session_data = session.get_decoded()
-            print(session_data)
-            
+    
             if meetup.slug in session_data.keys():
                 views = session_data.get(meetup.slug, 0)
-                print(views)
+                
                
                 views_by_meetup[meetup.slug] += views  
     return views_by_meetup
+
+def count_likes(meetups):
+    likes_by_meetup = {meetup.slug: meetup.like_set.filter(meetup=meetup, liked=True).count() for meetup in meetups }
+    return likes_by_meetup

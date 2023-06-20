@@ -28,6 +28,15 @@
                 <h2>What this meetup about?</h2>
                 <p>{{ meetup.description }}</p>
                 <footer>Need more details? Please <a href="mailto:{{meetup.organizer_email}}">contact the organizer</a>.</footer>
+                
+                {% if like_exist %}
+                <button hx-post="{{ meetup.get_absolute_url }}" type="button" class="btn btn-primary mt-2"><i class="fa-regular fa-thumbs-down"></i></i></button>
+                {% else %}
+                <button hx-post="{{ meetup.get_absolute_url }}" type="button" class="btn btn-primary mt-2"><i class="fa-regular fa-thumbs-up"></i></button>
+
+                    
+                {% endif %}
+                    
             </section>
         </article>
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Meetup, Location, Company
+from .models import Meetup, Location, Company, Like
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
@@ -34,5 +34,5 @@ class AdminCompany(admin.ModelAdmin):
     list_display = ["creator", "name"]
     
 admin.site.register(Company, AdminCompany)
-
+admin.site.register(Like)
 

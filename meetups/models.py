@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 
@@ -48,8 +48,14 @@ class Meetup(models.Model):
     def get_absolute_url(self):
         return reverse('detail', args=[self.slug])
     
-    def save(self, *args, **kwargs) -> None:
+    def save(self, *args, **kwargs):
         if self.date < datetime.date.today():
             raise ValidationError("The date cannot be in the past")
         return super().save(*args, **kwargs)
     
+
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    meetup = models.ForeignKey(Meetup, on_delete=models.CASCADE)
+    liked = models.BooleanField(default=False)

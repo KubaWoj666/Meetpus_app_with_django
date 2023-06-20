@@ -10,11 +10,14 @@ from django.utils.text import slugify
 from django.contrib.auth.models import User, Group
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
-from.models import Meetup, Location
+from.models import Meetup, Location, Like
 from .forms import UserCreationForm, MeetupForm, LocationForm, CompanyForm, ParticipantForm
 from django.contrib.auth.forms import AuthenticationForm
 
-from .utils import count_views_by_meetup
+from django_htmx.http import HttpResponseClientRefresh
+from django.db.models import Count
+
+from .utils import count_views_by_meetup, count_likes
 
 
 @login_required(login_url="login")
@@ -40,14 +43,22 @@ def home_view(request):
 @login_required(login_url="login")
 @permission_required("meetups.can_add_meetup", login_url='/login', raise_exception=True)
 def creator_panel_view(request, pk):
-   
     meetups = Meetup.objects.filter(organizer=pk)
+
     
-    views_by_meetup = count_views_by_meetup(meetups)
+    likes_by_meetup = count_likes(meetups)
+    print(likes_by_meetup)
+    
+    # for meetup in meetups:
+    #     like = meetup.like_set.filter(meetup=meetup, liked=True).count()
+    #     likes_by_meetup[meetup] = like
+
+    #     print(likes_by_meetup)
+    # views_by_meetup = count_views_by_meetup(meetups)
 
     context = {
         "meetups": meetups,
-        "views_by_meetup": views_by_meetup
+        "likes_by_meetup": likes_by_meetup
 
         }
 
@@ -56,16 +67,39 @@ def creator_panel_view(request, pk):
 
 @login_required(login_url="login")
 def detail_view(request, slug):
-    error_message=None
+    error_message = None
+    like_exist = None
+
+    
     
     try:
         meetup = Meetup.objects.get(slug=slug)
+        user = request.user
+        like_exist = meetup.like_set.filter(meetup=meetup, user=user, liked=True)
+        if like_exist:
+            like_exist = True
+
         if request.method == "GET":
             form = ParticipantForm(initial={'email': request.user.email})
-            views = request.session.get(meetup.slug, 0)
-            if request.user != meetup.organizer:
-                request.session[meetup.slug] = views + 1
-                
+            # views = request.session.get(meetup.slug, 0)
+            # if request.user != meetup.organizer:
+            #     request.session[meetup.slug] = views + 1
+        
+        # dislike
+        elif request.htmx and like_exist==True:
+            like = Like.objects.get(meetup=meetup, user=user, liked=True)
+            like.delete()
+            return HttpResponseClientRefresh()
+        
+        # like
+        elif request.htmx:
+            like = Like.objects.create(meetup=meetup, user=user, liked=True)
+            like.save()
+            print("htmx")
+            return HttpResponseClientRefresh()
+        
+        
+
         else:
             form = ParticipantForm(request.POST, initial={'email': request.user.email})
             if form.is_valid():
@@ -82,9 +116,10 @@ def detail_view(request, slug):
             "meetup_exist":True,
             "form":form,
             "error_message":error_message,
-            "views" : views
-            
-        }
+            "like_exist":like_exist
+            # "views" : views
+            }
+        
         return render(request, "meetups/detail.html" ,context)
     
     except Exception as exc:
@@ -423,3 +458,12 @@ def remove_form_session(request, slug):
     return render(request, "meetups/includes/read_later_meetups_list.html", context)
 
     
+# def like_meetup_view(request, slug):
+
+#     meetup = Meetup.objects.get(slug=slug)
+#     user = request.user
+#     print(request.method)
+#     if request.method == "POST":
+#         like = Like.objects.create(user=user, meetup=meetup, liked=True)
+#         like.save()
+#     return HttpResponse(status=204)
