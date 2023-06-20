@@ -45,17 +45,8 @@ def home_view(request):
 def creator_panel_view(request, pk):
     meetups = Meetup.objects.filter(organizer=pk)
 
-    
     likes_by_meetup = count_likes(meetups)
-    print(likes_by_meetup)
     
-    # for meetup in meetups:
-    #     like = meetup.like_set.filter(meetup=meetup, liked=True).count()
-    #     likes_by_meetup[meetup] = like
-
-    #     print(likes_by_meetup)
-    # views_by_meetup = count_views_by_meetup(meetups)
-
     context = {
         "meetups": meetups,
         "likes_by_meetup": likes_by_meetup
@@ -70,7 +61,6 @@ def detail_view(request, slug):
     error_message = None
     like_exist = None
 
-    
     
     try:
         meetup = Meetup.objects.get(slug=slug)
