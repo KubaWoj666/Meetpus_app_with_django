@@ -1,0 +1,8 @@
+<label for="id_location">Location:</label>
+    <select  name="location" id="id_location" required>  
+        <option  value="">Select location</option>
+        {% for location in locations %}
+            <option   value="{{ location.pk }}">{{ location.city }} - {{location.street}}</option>
+        {% endfor %}
+    </select>
+    <button  hx-get="{% url 'create-location' %}"  hx-target="#dialog"  id="add_location" type="button" class="button-form mt-2" >Add new location</button>

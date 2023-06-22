@@ -57,15 +57,8 @@
             {% render_field form.location class="form-control" hx-post="/htmx/check_username" hx-swap="innerHTML" hx-trigger="keyup delay:1s" hx-target="#username-error"%}
         </div> -->
         
-        <div id="chosen_location" class="forms-control {% if field.errors %} errors {% endif %} ">
-            <label for="id_location">Location:</label>
-            <select  name="location" id="id_location" required> 
-                <option  value="">Select location</option>
-                {% for location in locations %}
-                    <option   value="{{ location.pk }}">{{ location.city }} - {{location.street}}</option>
-                {% endfor %}
-            </select>
-            <button hx-get="{% url 'create-location' %}"  hx-target="#dialog"  id="add_location" type="button" class="button-form mt-2" >Add new location</button>
+        <div hx-boost="true" id="chosen_location" class="forms-control {% if field.errors %} errors {% endif %} ">
+            {% include 'meetups/includes/location.html' %}
         </div>
 
         <button id="meetup_button" class="button-form" type="submit">Create Meetup</button>

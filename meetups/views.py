@@ -88,8 +88,6 @@ def detail_view(request, slug):
             print("htmx")
             return HttpResponseClientRefresh()
         
-        
-
         else:
             form = ParticipantForm(request.POST, initial={'email': request.user.email})
             if form.is_valid():
@@ -147,7 +145,6 @@ def update_meetup_view(request, slug):
             meetup = form.save(commit=False)
             meetup.slug = slugify(meetup.title)
             meetup.organizer = request.user
-            print(meetup.title)
             form.save()
             return redirect("creator-panel", pk=user.id)
     else:
@@ -215,13 +212,21 @@ def create_meetup_view(request):
 @permission_required('meetups.can_add_meetup', login_url='/login', raise_exception=True)
 def add_new_location_view(request):
     print(request.method)
+    
+    if request.htmx:
+        print("htmx", request.htmx.target)
+        print("htmx", request.htmx.trigger)
+
     if request.method == "POST":
         form = LocationForm(request.POST)
         if form.is_valid():
-            city = form.cleaned_data.get('city') 
-            street = form.cleaned_data.get('street') 
-            # print(city)
-            form.save()
+            country = form.cleaned_data.get("country").title()
+            city = form.cleaned_data.get("city").title()
+            street = form.cleaned_data.get("street").title()
+            location, created = Location.objects.get_or_create(country=country, city=city, street=street)
+            location.save()
+            print("z lozation view", created)
+            request.session["location_created"] = created
             return HttpResponse(status=204, headers={'HX-Trigger': 'newLocation'})
     else:
         form = LocationForm()
@@ -374,21 +379,26 @@ class ReadLater(View):
 # ==== HTMX views ====
 
 def get_last_location_view(request):
-    last_loc = Location.objects.last()
-    # html = "<div id='chosen_location' class='forms-control {% if field.errors %} errors {% endif %}' ><label>{{ form.location.label_tag }}</label>{{ form.location.errors }}{% render_field form.location class='form-control' }<button hx-get='/htmx/last_loc' hx-target='#dialog'  id='add_location' type='button' class='button-form mt-2' >Add new location</button></div>"
-    html = "<label for='id_location'>Location:</label><select name='location' required id='id_location'><option value='%s' selected>%s</option></select>" %(last_loc.id,last_loc)
-    return HttpResponse(html)
-    # if request.method == 'POST':
-    #     city = request.POST.get("city")
-    #     street = request.POST.get("street")
+    location_created = request.session.get("location_created")
+    print( "z sesji get last loc", location_created)
+    locations = Location.objects.all()
+    last_location = locations.last()
+    
+    context = {
+        "locations": locations,
+        "location_created": location_created,
+        "last_location": last_location
+    }
 
+    # form = LocationForm(data=request.POST)
+    # if form.is_valid():
+    #     city = form.cleaned_data.get("city")
     #     print(city)
-    #     print(street)
-
-    #     # Przykładowa logika obsługi danych i zapisywania do bazy danych
-    #     # html = "<label for='id_location'>Location:</label><select name='location' required id='id_location'><option value='%s' selected>%s</option></select>" %(last_loc.id,last_loc)
-
-    #     return HttpResponse(status=200)
+    
+    # html = "<div id='chosen_location' class='forms-control {% if field.errors %} errors {% endif %}' ><label>{{ form.location.label_tag }}</label>{{ form.location.errors }}{% render_field form.location class='form-control' }<button hx-get='/htmx/last_loc' hx-target='#dialog'  id='add_location' type='button' class='button-form mt-2' >Add new location</button></div>"
+    # html = "<label for='id_location'>Location:</label><select name='location' required id='id_location'><option value='%s' selected>%s</option></select>" %(last_loc.id,last_loc)
+    # return HttpResponse(html)
+    return render(request, "meetups/includes/location.html", context)
   
 
 def check_username_view(request):
@@ -447,13 +457,3 @@ def remove_form_session(request, slug):
 
     return render(request, "meetups/includes/read_later_meetups_list.html", context)
 
-    
-# def like_meetup_view(request, slug):
-
-#     meetup = Meetup.objects.get(slug=slug)
-#     user = request.user
-#     print(request.method)
-#     if request.method == "POST":
-#         like = Like.objects.create(user=user, meetup=meetup, liked=True)
-#         like.save()
-#     return HttpResponse(status=204)
