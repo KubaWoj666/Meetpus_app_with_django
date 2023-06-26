@@ -1,0 +1,25 @@
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasExampleLabel">User Panel</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div>
+        
+      </div>
+      <div class="dropdown mt-3">
+        <ul style="list-style-type: none;">
+            <li>
+                <a class="btn btn-secondary mt-2 " type="button" href="{% url 'your_profile'  %}" >Your Profile</a>
+            </li>
+            <li>
+                <a class="btn btn-secondary mt-2 " type="button" href="{% url 'update-profile' %}">Edit Profile</a>
+            </li>
+            <li>
+                <a class="btn btn-secondary mt-2" type="button" href="{% url 'change-password' %}">Change Password</a>
+            </li>
+        </ul>
+       
+      </div>
+    </div>
+  </div>

@@ -61,7 +61,9 @@
             <div>
               <ul class="navbar-nav">
                 {% if user.is_authenticated %}
-                <span class="navbar-text">Logged in as {{user.username}} | </span>
+                <span class="navbar-text">Logged in as  
+                  <a data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                    {{user.username}}</a> | </span>
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                 </li>
@@ -86,6 +88,8 @@
                 {{error_message}}
             </div>
         {% endif %}
+
+        {% include 'meetups/includes/user_panel.html' %}
         
     {% block content %}
         

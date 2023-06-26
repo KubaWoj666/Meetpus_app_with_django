@@ -1,0 +1,14 @@
+
+.main-list {
+    
+    list-style-type: none;
+}
+
+.list-items {
+    text-align: center;
+    
+    border: solid black;
+    border-radius: 30px;;
+    background-color: rgb(191, 184, 184);
+}
+

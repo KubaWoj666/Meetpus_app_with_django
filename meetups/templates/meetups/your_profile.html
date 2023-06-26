@@ -1,0 +1,35 @@
+{% extends '_base.html' %}
+{% load static %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'meetups/style/your_profile.css' %}">
+
+{% endblock css %}
+    
+
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center">
+    <div class="card mt-2 " style="width: 25rem;">
+        <img src="{% static 'meetups/images/avatar.svg' %}" class="card-img-top" alt="...">
+        <div class="card-body  ">
+            <h5 class="card-title d-flex justify-content-center">Hello {{user.username}}</h5>
+
+            <ul class="main-list" >
+                <li class=" mt-4">Username<p class="list-items ">{{user.username}}</p></li>
+                <li class=" mt-2">Email<p class="list-items ">{{user.email}}</p></li>
+                <li class=" mt-2">Last login<p class="list-items ">{{user.last_login|date:"d-m-Y"}}</p></li>
+            </ul>
+            
+            <div class="buttons d-flex justify-content-evenly">
+                <a href="{% url 'update-profile' %}" class="btn btn-primary">Update</a>
+                <a href="{% url 'change-password' %}" class="btn btn-primary ">Change Password</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+    
+{% endblock content %}
+    

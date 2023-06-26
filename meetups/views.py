@@ -11,11 +11,11 @@ from django.contrib.auth.models import User, Group
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
 from.models import Meetup, Location, Like
-from .forms import UserCreationForm, MeetupForm, LocationForm, CompanyForm, ParticipantForm
-from django.contrib.auth.forms import AuthenticationForm
+from .forms import UserCreationForm, MeetupForm, LocationForm, CompanyForm, ParticipantForm, UserChangeForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 from django_htmx.http import HttpResponseClientRefresh
-from django.db.models import Count
 
 from .utils import count_views_by_meetup, count_likes
 
@@ -317,6 +317,63 @@ def logout_view(request):
     logout(request)
     return redirect("home")
 
+@login_required(login_url="login")
+def user_profile_view(request):
+    # user = User.objects.get(id=pk)
+    user = request.user
+
+    context = {
+        "user": user
+    } 
+
+    return render(request, "meetups/your_profile.html", context)
+
+@login_required(login_url="login")
+def change_password_view(request):
+    # user = request.user
+    error_message = None
+
+    if request.method == "POST":
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            error_message = "Your password was successfully updated!" 
+            return redirect('home')
+        else:
+            error_message = "Correct errors please!"
+    
+    else:
+        form = PasswordChangeForm(request.user)
+    
+    context = {
+        "form": form,
+        "error_message": error_message,
+    }
+
+    return render(request, "meetups/change_password.html", context)
+
+def update_user_data(request):
+    user = request.user
+    error_message = None
+    if request.method == "POST":
+        form = UserChangeForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect("your_profile")
+        else:
+            error_message = "Correct errors please!"
+    
+    else:
+        form = UserChangeForm(instance=user)
+    
+    context = {
+        "form": form,
+        "error_message": error_message,
+    }
+
+    return render(request, "meetups/update_profile.html", context)
+
 
 @login_required(login_url="login")
 def user_sign_up_meetups_view(request, pk):
@@ -326,7 +383,6 @@ def user_sign_up_meetups_view(request, pk):
         if request.method == "POST":
             user_id = request.user.id
             meetup_id = request.POST.get("meetup_id")
-            print(meetup_id)
             meetup = meetups.get(id=meetup_id)
             meetup.participants.remove(user_id)
 

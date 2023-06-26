@@ -15,8 +15,11 @@ urlpatterns = [
     path("meetups/profile/sing-up",views.sign_up_user_view, name="sign-up"),
     path("meetups/profile/default-or-creator/<int:pk>", views.default_or_creator_view, name="default_or_creator"),
     path("meetups/profile/company-info/<int:pk>", views.create_company_view, name="create-company"),
-    path("meetups/profile/logout",views.logout_view, name="logout"),
-    path("meetups/profile/login",views.login_view, name="login"),
+    path("meetups/profile/logout", views.logout_view, name="logout"),
+    path("meetups/profile/login", views.login_view, name="login"),
+    path("meetups/profile/user-profile", views.user_profile_view, name="your_profile"),
+    path("meetup/profile/change-password", views.change_password_view, name="change-password"),
+    path("meetups/profile/update-profile", views.update_user_data, name="update-profile"),
 
     path("meetups/creator-panel/<int:pk>", views.creator_panel_view, name="creator-panel"),
     path("meetups/update-meetup/<slug:slug>", views.update_meetup_view, name="update_meetup"),
