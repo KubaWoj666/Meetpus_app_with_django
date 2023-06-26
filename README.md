@@ -22,28 +22,7 @@ All users can browse upcoming meetups view and like them in a separate template.
   #read later page
 <img width="1432" alt="Zrzut ekranu 2023-06-13 o 12 43 40" src="https://github.com/KubaWoj666/Meetpus_app_with_django/assets/108401267/61b2f810-688f-4d37-a35c-ffe9eb2681ee">
 
-<!-- 
-# Set up
-- Create a virtual environment
-  - python3 -m venv venv (in VsCode)
 
-- Activate virtual environment (in VsCode)
-  - source venv/bin/activate
-
-- Install packages from requirements.txt
-  - pip install -r requirements.txt
-
-- Migrate database
-  - python manage.py makemigrations
-  - python manage.py migrate
-
-- Run srerver
-  - python manage.py runserver -->
-
-
-# To do
-- Add User panel where you can management your profile 
-- Fix issue related to adding a location in modal using htmx.
 
 # Technologies / Tools
 - Python 3.10
@@ -53,5 +32,7 @@ All users can browse upcoming meetups view and like them in a separate template.
 - Html
 - Java Script
 - Bootstrap
-- Django widget tweaks
+- django widget tweaks
+- django htmx
+- django crispy forms
 - Css
