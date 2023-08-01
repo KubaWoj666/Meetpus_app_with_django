@@ -4,7 +4,7 @@ I created a meetups app where you can sign up as a "creator" or "participant".
 
 Creators have permissions to create, update, and delete meetups, locations, and companies.
 
-Creators also have their own panel where they can check how many people have signed up for their meetings (likes, views, and participant tracking are still under consideration for future development).
+Creators also have their own panel where they can check how many people have signed up and liks their meetings .
 
 All users can browse upcoming meetups view and like them in a separate template. The app utilizes Django Sessions to store your interactions. Additionally, you can view and manage meetups you have signed up for, as well as sign out if needed.
 
